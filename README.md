@@ -1,0 +1,7 @@
+# Shoot
+
+## Package
+```
+./gradlew distZip
+```
+
