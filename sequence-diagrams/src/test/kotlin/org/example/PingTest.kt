@@ -1,4 +1,4 @@
-package org.http4k.testing
+package org.example
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.http4k.core.HttpHandler
@@ -13,10 +13,8 @@ import org.http4k.tracing.*
 import org.http4k.tracing.TraceStep.StopRendering
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
-import org.shoot.indirectPingApp
-import org.shoot.pingApp
 
-class ShootTest {
+class PingTest {
 
     // generates PlantUML diagrams in .generated/diagrams
     @RegisterExtension

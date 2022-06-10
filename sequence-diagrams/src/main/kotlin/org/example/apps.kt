@@ -1,4 +1,4 @@
-package org.shoot
+package org.example
 
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
