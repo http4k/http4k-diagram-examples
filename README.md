@@ -1,7 +1,3 @@
-# Shoot
+# http4k diagrams example
 
-## Package
-```
-./gradlew distZip
-```
-
+See `SystemTest` for details.
