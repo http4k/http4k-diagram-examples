@@ -1,0 +1,10 @@
+@startuml
+title Sequence diagram example: Ignored interactions
+participant JohnDoe
+participant AServer
+JohnDoe -> AServer: GET ping 
+activate AServer
+
+AServer --> JohnDoe: 200 OK
+deactivate AServer
+    @enduml

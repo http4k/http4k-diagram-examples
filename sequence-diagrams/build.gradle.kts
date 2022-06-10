@@ -5,6 +5,7 @@ dependencies {
     implementation("dev.forkhandles:result4k:_")
     implementation(Http4k.aws)
     implementation(Http4k.cloudnative)
+    implementation(Http4k.incubator)
     implementation(Http4k.format.jackson)
     implementation(Http4k.client.okhttp)
     implementation(Http4k.server.undertow)

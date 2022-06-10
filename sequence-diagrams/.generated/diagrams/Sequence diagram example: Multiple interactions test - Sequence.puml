@@ -1,0 +1,20 @@
+@startuml
+title Sequence diagram example: Multiple interactions test
+participant JohnDoe
+participant AnotherServer
+participant AServer
+JohnDoe -> AnotherServer: GET indirect-ping 
+activate AnotherServer
+AnotherServer -> AServer: GET ping 
+activate AServer
+
+AServer --> AnotherServer: 200 OK
+deactivate AServer
+AnotherServer --> JohnDoe: 200 OK
+deactivate AnotherServer
+JohnDoe -> AServer: GET ping 
+activate AServer
+
+AServer --> JohnDoe: 200 OK
+deactivate AServer
+    @enduml
