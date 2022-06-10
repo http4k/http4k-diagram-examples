@@ -1,4 +1,4 @@
-description = "Core component with the Shoot domain"
+description = "Example of sequence diagram generation"
 
 dependencies {
     api(platform(Http4k.bom))

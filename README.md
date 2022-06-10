@@ -1,3 +1,3 @@
 # http4k diagrams example
 
-See `SystemTest` for details.
+See [PingTest](sequence-diagrams/src/test/kotlin/org/example/PingTest.kt) for details.
