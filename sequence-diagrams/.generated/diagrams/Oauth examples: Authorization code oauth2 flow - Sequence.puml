@@ -1,0 +1,15 @@
+@startuml
+title Oauth examples: Authorization code oauth2 flow
+participant JohnDoe
+participant Browser
+participant RelyingParty
+JohnDoe -> Browser: GET ping 
+activate Browser
+Browser -> RelyingParty: GET ping 
+activate RelyingParty
+
+RelyingParty --> Browser: 200 OK
+deactivate RelyingParty
+Browser --> JohnDoe: 200 OK
+deactivate Browser
+    @enduml
