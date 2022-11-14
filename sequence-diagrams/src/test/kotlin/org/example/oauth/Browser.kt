@@ -25,11 +25,6 @@ fun Browser(relyingParty: HttpHandler, authServer: HttpHandler, events: TraceRep
         .then(AppIncomingHttp())
         .then(ClientFilters.FollowRedirects())
         .then(ClientFilters.Cookies())
-        .then(Filter { next ->
-            {
-                next(it.removeHeader("host"))
-            }
-        })
         .then(
             reverseProxy(
                 "relying-party" to proxiedOutbound(events, relyingParty),
