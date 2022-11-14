@@ -26,6 +26,11 @@ fun RelyingParty(client: HttpHandler): RoutingHttpHandler {
     )
 
     return AppIncomingHttp()
+        .then(Filter { next ->
+            {
+                next(it)
+            }
+        })
         .then(routes(
             "/a-protected-resource" bind Method.GET to provider.authFilter.then {
                 Response(Status.OK).body("pong")

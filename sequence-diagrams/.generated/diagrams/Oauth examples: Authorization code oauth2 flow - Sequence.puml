@@ -2,19 +2,20 @@
 title Oauth examples: Authorization code oauth2 flow
 participant JohnDoe
 participant Browser
+participant RelyingParty
 participant AuthServer
-JohnDoe -> Browser: GET a-protected-resource 
+JohnDoe -> Browser: GET as/authorize 
 activate Browser
-Browser -> Browser: GET a-protected-resource 
-activate Browser
+Browser -> RelyingParty: GET a-protected-resource 
+activate RelyingParty
 
-Browser --> Browser: 307 Temporary Redirect
-deactivate Browser
+RelyingParty --> Browser: 307 Temporary Redirect
+deactivate RelyingParty
 Browser -> AuthServer: GET as/authorize 
 activate AuthServer
 
-AuthServer --> Browser: 404 Route not found
+AuthServer --> Browser: 200 OK
 deactivate AuthServer
-Browser --> JohnDoe: 404 Route not found
+Browser --> JohnDoe: 200 OK
 deactivate Browser
     @enduml

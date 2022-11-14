@@ -32,16 +32,26 @@ class OAuthTests {
     private val relyingParty = RelyingParty(authServer)
 
     private val browser =
-        AppIncomingHttp()
+        Filter.NoOp
+            .then(Filter { next ->
+                {
+                    next(it.uri(it.uri.host(it.header("host")!!)).removeHeader("host"))
+                }
+            })
+            .then(AppIncomingHttp())
             .then(ClientFilters.FollowRedirects())
             .then(ClientFilters.Cookies())
+            .then(Filter { next ->
+                {
+                    next(it.removeHeader("host"))
+                }
+            })
             .then(
                 reverseProxy(
                     "relying-party" to proxiedOutbound(events, relyingParty, "relying-party"),
                     "auth-server" to proxiedOutbound(events, authServer, "auth-server")
                 )
             )
-
 
     private val user = UserActor(events, browser)
 
@@ -56,8 +66,6 @@ fun UserActor(evens: Events, browser: HttpHandler) = TracedActorHttp("John Doe",
 
 fun proxiedOutbound(events: Events, client: HttpHandler, name: String) =
     Filter.NoOp
-        .then(Filter { next -> { next(it.uri(it.uri.host(name))) } })
         .then(ReportHttpTransaction { AppEvents(AppName("browser")).then(events)(HttpEvent.Outgoing(it)) })
         .then(RequestTracing())
-        .then(PrintRequestAndResponse())
         .then(client)

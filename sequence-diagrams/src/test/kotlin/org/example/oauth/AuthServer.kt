@@ -35,6 +35,11 @@ fun AuthServer(): RoutingHttpHandler {
     )
 
     return AppIncomingHttp()
+        .then(Filter { next ->
+            {
+                next(it)
+            }
+        })
         .then(routes(
             "as" bind routes(
                 server.tokenRoute,
