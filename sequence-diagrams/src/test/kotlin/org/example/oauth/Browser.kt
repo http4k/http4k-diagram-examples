@@ -15,26 +15,27 @@ import org.http4k.tracing.AppIncomingHttp
 import org.http4k.tracing.AppName
 import org.http4k.tracing.TraceReportingEvents
 
-fun Browser(relyingParty: HttpHandler, authServer: HttpHandler, events: TraceReportingEvents) = Filter.NoOp
-    .then(Filter { next ->
-        {
-            next(it.uri(it.uri.host(it.header("host")!!)).removeHeader("host"))
-        }
-    })
-    .then(AppIncomingHttp())
-    .then(ClientFilters.FollowRedirects())
-    .then(ClientFilters.Cookies())
-    .then(Filter { next ->
-        {
-            next(it.removeHeader("host"))
-        }
-    })
-    .then(
-        reverseProxy(
-            "relying-party" to proxiedOutbound(events, relyingParty),
-            "auth-server" to proxiedOutbound(events, authServer)
+fun Browser(relyingParty: HttpHandler, authServer: HttpHandler, events: TraceReportingEvents) =
+    Filter.NoOp
+        .then(Filter { next ->
+            {
+                next(it.uri(it.uri.host(it.header("host")!!)).removeHeader("host"))
+            }
+        })
+        .then(AppIncomingHttp())
+        .then(ClientFilters.FollowRedirects())
+        .then(ClientFilters.Cookies())
+        .then(Filter { next ->
+            {
+                next(it.removeHeader("host"))
+            }
+        })
+        .then(
+            reverseProxy(
+                "relying-party" to proxiedOutbound(events, relyingParty),
+                "auth-server" to proxiedOutbound(events, authServer)
+            )
         )
-    )
 
 private fun proxiedOutbound(events: Events, client: HttpHandler) =
     Filter.NoOp
