@@ -33,9 +33,3 @@ class OAuthTests {
 }
 
 fun UserActor(evens: Events, browser: HttpHandler) = TracedActorHttp("John Doe", browser, evens)
-
-fun proxiedOutbound(events: Events, client: HttpHandler, name: String) =
-    Filter.NoOp
-        .then(ReportHttpTransaction { AppEvents(AppName("browser")).then(events)(HttpEvent.Outgoing(it)) })
-        .then(RequestTracing())
-        .then(client)
