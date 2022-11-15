@@ -1,14 +1,14 @@
 package org.example.oauth
 
-import org.http4k.core.Filter
-import org.http4k.core.HttpHandler
-import org.http4k.core.NoOp
-import org.http4k.core.then
+import org.http4k.core.*
 import org.http4k.events.Events
 import org.http4k.events.HttpEvent
 import org.http4k.events.then
 import org.http4k.filter.ClientFilters
 import org.http4k.filter.ResponseFilters
+import org.http4k.routing.RoutedRequest
+import org.http4k.routing.RoutedResponse
+import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.reverseProxy
 import org.http4k.tracing.AppEvents
 import org.http4k.tracing.AppIncomingHttp
@@ -24,6 +24,7 @@ fun Browser(relyingParty: HttpHandler, authServer: HttpHandler, events: TraceRep
         })
         .then(AppIncomingHttp())
         .then(ClientFilters.FollowRedirects())
+        .then(IgnoreRoutedResponse())
         .then(ClientFilters.Cookies())
         .then(
             reverseProxy(
@@ -37,3 +38,14 @@ private fun proxiedOutbound(events: Events, client: HttpHandler) =
         .then(ResponseFilters.ReportHttpTransaction { AppEvents(AppName("browser")).then(events)(HttpEvent.Outgoing(it)) })
         .then(ClientFilters.RequestTracing())
         .then(client)
+
+private fun IgnoreRoutedResponse() = Filter { next ->
+    {
+        when (val response = next(it)) {
+            is RoutedResponse -> Response(response.status).body(response.body).headers(response.headers)
+            else -> response
+        }
+    }
+}
+
+

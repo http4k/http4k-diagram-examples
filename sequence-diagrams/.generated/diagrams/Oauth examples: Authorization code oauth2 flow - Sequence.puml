@@ -4,7 +4,7 @@ participant JohnDoe
 participant Browser
 participant RelyingParty
 participant AuthServer
-JohnDoe -> Browser: GET as/authorize 
+JohnDoe -> Browser: GET a-protected-resource 
 activate Browser
 Browser -> RelyingParty: GET a-protected-resource 
 activate RelyingParty
@@ -16,25 +16,6 @@ activate AuthServer
 
 AuthServer --> Browser: 200 OK
 deactivate AuthServer
-Browser --> JohnDoe: 200 OK
-deactivate Browser
-JohnDoe -> Browser: POST a-protected-resource 
-activate Browser
-Browser -> AuthServer: POST as/authorize 
-activate AuthServer
-
-AuthServer --> Browser: 303 See Other
-deactivate AuthServer
-Browser -> RelyingParty: GET rp/callback 
-activate RelyingParty
-
-RelyingParty --> Browser: 307 Temporary Redirect
-deactivate RelyingParty
-Browser -> RelyingParty: GET a-protected-resource 
-activate RelyingParty
-
-RelyingParty --> Browser: 200 OK
-deactivate RelyingParty
 Browser --> JohnDoe: 200 OK
 deactivate Browser
     @enduml

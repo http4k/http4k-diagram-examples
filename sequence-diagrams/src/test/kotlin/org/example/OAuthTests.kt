@@ -24,7 +24,7 @@ class OAuthTests {
     @Test
     fun `Authorization code oauth2 flow`() {
         user(Request(GET, "https://relying-party/a-protected-resource"))
-        user(Request(Method.POST, "https://auth-server/as/authorize"))
+//        user(Request(Method.POST, "https://auth-server/as/authorize"))
         println(events.joinToString("\n"))
     }
 }
