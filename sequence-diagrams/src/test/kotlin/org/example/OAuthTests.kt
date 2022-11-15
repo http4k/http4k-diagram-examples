@@ -6,10 +6,6 @@ import org.example.oauth.RelyingParty
 import org.http4k.core.*
 import org.http4k.core.Method.GET
 import org.http4k.events.Events
-import org.http4k.events.HttpEvent
-import org.http4k.events.then
-import org.http4k.filter.ClientFilters.RequestTracing
-import org.http4k.filter.ResponseFilters.ReportHttpTransaction
 import org.http4k.tracing.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -27,7 +23,7 @@ class OAuthTests {
 
     @Test
     fun `Authorization code oauth2 flow`() {
-        user(Request(GET, "https://browser/a-protected-resource").header("host", "relying-party"))
+        user(Request(GET, "https://relying-party/a-protected-resource"))
         println(events.joinToString("\n"))
     }
 }
