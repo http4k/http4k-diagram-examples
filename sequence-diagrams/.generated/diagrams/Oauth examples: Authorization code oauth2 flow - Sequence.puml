@@ -18,4 +18,23 @@ AuthServer --> Browser: 200 OK
 deactivate AuthServer
 Browser --> JohnDoe: 200 OK
 deactivate Browser
+JohnDoe -> Browser: POST as/authorize 
+activate Browser
+Browser -> AuthServer: POST as/authorize 
+activate AuthServer
+
+AuthServer --> Browser: 303 See Other
+deactivate AuthServer
+Browser -> RelyingParty: GET rp/callback 
+activate RelyingParty
+
+RelyingParty --> Browser: 307 Temporary Redirect
+deactivate RelyingParty
+Browser -> RelyingParty: GET a-protected-resource 
+activate RelyingParty
+
+RelyingParty --> Browser: 200 OK
+deactivate RelyingParty
+Browser --> JohnDoe: 200 OK
+deactivate Browser
     @enduml
