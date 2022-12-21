@@ -21,14 +21,14 @@ sealed class TraceActor(private val index: Int) : Comparable<TraceActor> {
     data class External(override val name: String) : TraceActor(4)
 }
 
-interface CallTree {
-    val origin: String
-    val target: String
-    val originActor: TraceActor
-    val targetActor: TraceActor
-    val describe: String
+abstract class CallTree(
+    val origin: String,
+    val target: String,
+    val originActor: TraceActor,
+    val targetActor: TraceActor,
+    val describe: String,
     val children: List<CallTree>
-}
+)
 
 private val interestingHeaders = setOf("Authorization", "User-Agent", "Cookie", "Set-Cookie", "RequesterId")
 
@@ -36,33 +36,34 @@ object InterestingHeadersOnly : (String) -> Boolean by { it in interestingHeader
 
 interface TraceStep
 
-data class HttpCallTree(
-    private val unfactoredOrigin: String,
-    private val originating: Boolean,
+class HttpCallTree(
+    origin: String,
+    originating: Boolean,
     val uri: Uri,
     val method: Method,
     val status: Status,
-    override val children: List<CallTree>,
-    val headers: List<String> = emptyList(),
-) : TraceStep, CallTree {
-    override val origin = unfactoredOrigin.toLabel()
-    override val target = uri.host.toLabel()
-    override val describe = method.name + " " + uri.path
-    override val originActor = if (originating) Person(origin) else Internal(origin)
-    override val targetActor = Internal(target)
-}
+    children: List<CallTree>,
+    val headers: List<String> = emptyList()
+) : CallTree(
+    origin = origin.toLabel(),
+    target = uri.host.toLabel(),
+    describe = method.name + " " + uri.path,
+    originActor = if (originating) Person(origin.toLabel()) else Internal(origin.toLabel()),
+    targetActor = Internal(uri.host.toLabel()),
+    children = children
+), TraceStep
 
-data class DatabaseCallTree(
-    private val unfactoredOrigin: String,
-    private val methodName: String,
-) : TraceStep, CallTree {
-    override val origin = unfactoredOrigin.toLabel()
-    override val target = "db"
-    override val describe = methodName
-    override val originActor = Internal(origin)
-    override val targetActor = Database(target)
-    override val children = emptyList<CallTree>()
-}
+class DatabaseCallTree(
+    origin: String,
+    methodName: String,
+) : CallTree(
+    origin = origin.toLabel(),
+    target = "db",
+    describe = methodName,
+    originActor = Internal(origin),
+    targetActor = Database("db"),
+    children = emptyList(),
+), TraceStep
 
 data class StartInteraction(
     val origin: String,

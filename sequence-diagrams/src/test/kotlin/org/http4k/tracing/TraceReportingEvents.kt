@@ -15,9 +15,8 @@ class TraceReportingEvents(
     private val testVariant: String? = null,
     private val dir: File = File(".generated/diagrams"),
     private val print: Boolean = false
-) : Events,
-    Iterable<Event>,
-    AfterTestExecutionCallback {
+) : Events, Iterable<Event>, AfterTestExecutionCallback {
+
     private val events = RecordingEvents()
 
     override fun afterTestExecution(context: ExtensionContext) {
@@ -35,11 +34,7 @@ class TraceReportingEvents(
         val fullTitle = appTitle + (testVariant?.let { " ($testVariant)" } ?: "")
         val render = render("$fullTitle: " + ec.testMethod.get().name, calls)
 
-        File(
-            dir.apply { mkdirs() },
-            render.title + ".puml"
-        )
-            .writeText(render.content)
+        File(dir.apply { mkdirs() }, render.title + ".puml").writeText(render.content)
     }
 
     private fun String.capitalize() =
@@ -63,6 +58,6 @@ interface SystemDescriptor {
 }
 
 
-data class AppName(val value: String): SystemDescriptor {
+data class AppName(val value: String) : SystemDescriptor {
     override val name: String = value
 }
