@@ -1,10 +1,10 @@
 @startuml
 title Sequence diagram example: Ping test
-participant JohnDoe
-participant AServer
-JohnDoe -> AServer: GET ping 
-activate AServer
+participant "John Doe"
+participant "a-server"
+"John Doe" -> "a-server": GET ping 
+activate "a-server"
 
-AServer --> JohnDoe: 200 OK
-deactivate AServer
+"a-server" --> "John Doe": 200 OK
+deactivate "a-server"
     @enduml

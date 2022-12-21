@@ -7,7 +7,6 @@ import org.http4k.events.Event
 import org.http4k.tracing.TraceActor.Database
 import org.http4k.tracing.TraceActor.Internal
 import org.http4k.tracing.TraceActor.Person
-import org.http4k.tracing.util.capitalize
 
 
 sealed class TraceActor(private val index: Int) : Comparable<TraceActor> {
@@ -45,11 +44,11 @@ class HttpCallTree(
     children: List<CallTree>,
     val headers: List<String> = emptyList()
 ) : CallTree(
-    origin = origin.toLabel(),
-    target = uri.host.toLabel(),
+    origin = origin,
+    target = uri.host,
     describe = method.name + " " + uri.path,
-    originActor = if (originating) Person(origin.toLabel()) else Internal(origin.toLabel()),
-    targetActor = Internal(uri.host.toLabel()),
+    originActor = if (originating) Person(origin) else Internal(origin),
+    targetActor = Internal(uri.host),
     children = children
 ), TraceStep
 
@@ -57,7 +56,7 @@ class DatabaseCallTree(
     origin: String,
     methodName: String,
 ) : CallTree(
-    origin = origin.toLabel(),
+    origin = origin,
     target = "db",
     describe = methodName,
     originActor = Internal(origin),
@@ -73,11 +72,3 @@ data class StartInteraction(
 object StartRendering : TraceStep, Event
 object StopRendering : TraceStep, Event
 
-private fun String.toLabel() =
-    (if (contains(".")) substringBefore('.') else this)
-        .replace("-", " ")
-        .replace("_", " ")
-        .replace(Regex(" +"), " ")
-        .trim()
-        .split(" ")
-        .joinToString("", transform = String::capitalize)

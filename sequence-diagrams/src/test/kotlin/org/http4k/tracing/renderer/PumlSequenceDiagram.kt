@@ -47,7 +47,7 @@ object PumlSequenceDiagram : TraceStepRenderer {
                 is TraceActor.External -> "participant"
                 is TraceActor.Internal -> "participant"
                 is TraceActor.Person -> "participant"
-            } + " ${next.name}"
+            } + " ${next.name()}"
             if (acc.contains(nextVal)) acc else acc + nextVal
         }
 
@@ -58,11 +58,11 @@ object PumlSequenceDiagram : TraceStepRenderer {
     }
 
     private fun HttpCallTree.asPumlSequenceDiagram(): String = """
-           |${origin} -> ${target}: $method ${uri.path} ${describeHeaders()}
-           |activate $target
+           |${origin()} -> ${target()}: $method ${uri.path} ${describeHeaders()}
+           |activate ${target()}
            |${children.joinToString("\n") { it.asPumlSequenceDiagram() }}
-           |${target} --> ${origin}: $status
-           |deactivate $target
+           |${target()} --> ${origin()}: $status
+           |deactivate ${target()}
             """.trimMargin()
 
     private fun HttpCallTree.describeHeaders() = headers
@@ -70,11 +70,13 @@ object PumlSequenceDiagram : TraceStepRenderer {
         .takeIf { it.isNotEmpty() }?.joinToString(prefix = "[", postfix = "]") ?: ""
 
     private fun DatabaseCallTree.asPumlSequenceDiagram(): String = """
-           |${origin} <-> ${target}: $describe
+           |${origin()} <-> ${target()}: $describe
             """.trimMargin()
 
     private fun StartInteraction.asPumlSequenceDiagram(): String = """
         
-        note over $origin : $origin $interactionName
+        note over ${origin()} : ${origin()} $interactionName
         """.trimIndent()
 }
+
+private operator fun String.invoke() = "\"" + this + "\""

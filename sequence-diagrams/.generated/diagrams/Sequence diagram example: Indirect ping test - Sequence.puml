@@ -1,15 +1,15 @@
 @startuml
 title Sequence diagram example: Indirect ping test
-participant JohnDoe
-participant AnotherServer
-participant AServer
-JohnDoe -> AnotherServer: GET indirect-ping 
-activate AnotherServer
-AnotherServer -> AServer: GET ping 
-activate AServer
+participant "John Doe"
+participant "another-server"
+participant "a-server"
+"John Doe" -> "another-server": GET indirect-ping 
+activate "another-server"
+"another-server" -> "a-server": GET ping 
+activate "a-server"
 
-AServer --> AnotherServer: 200 OK
-deactivate AServer
-AnotherServer --> JohnDoe: 200 OK
-deactivate AnotherServer
+"a-server" --> "another-server": 200 OK
+deactivate "a-server"
+"another-server" --> "John Doe": 200 OK
+deactivate "another-server"
     @enduml
