@@ -28,7 +28,7 @@ object PumlSequenceDiagram : TraceStepRenderer {
     }
 
     private fun CallTree.actors(): Set<TraceActor> =
-        (listOf(originActor(), targetActor()) + children.flatMap { it.actors() }).toSet()
+        (listOf(originActor, targetActor) + children.flatMap { it.actors() }).toSet()
 
     private fun Iterable<TraceActor>.toPumlActor() =
         fold(emptyList<String>()) { acc, next ->
@@ -48,11 +48,11 @@ object PumlSequenceDiagram : TraceStepRenderer {
     }
 
     private fun HttpCallTree.asPumlSequenceDiagram(): String = """
-           |${origin()} -> ${target()}: $method ${uri.path} ${describeHeaders()}
-           |activate ${target()}
+           |${origin} -> ${target}: $method ${uri.path} ${describeHeaders()}
+           |activate $target
            |${children.joinToString("\n") { it.asPumlSequenceDiagram() }}
-           |${target()} --> ${origin()}: $status
-           |deactivate ${target()}
+           |${target} --> ${origin}: $status
+           |deactivate $target
             """.trimMargin()
 
     private fun HttpCallTree.describeHeaders() = headers
@@ -60,7 +60,7 @@ object PumlSequenceDiagram : TraceStepRenderer {
         .takeIf { it.isNotEmpty() }?.joinToString(prefix = "[", postfix = "]") ?: ""
 
     private fun DatabaseCallTree.asPumlSequenceDiagram(): String = """
-           |${origin()} <-> ${target()}: ${describe()}
+           |${origin} <-> ${target}: $describe
             """.trimMargin()
 
     private fun StartInteraction.asPumlSequenceDiagram(): String = """
