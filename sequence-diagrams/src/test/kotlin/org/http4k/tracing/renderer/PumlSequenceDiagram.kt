@@ -61,7 +61,7 @@ object PumlSequenceDiagram : TraceStepRenderer {
            |${origin()} -> ${target()}: $request ${describeHeaders()}
            |activate ${target()}
            |${children.joinToString("\n") { it.asPumlSequenceDiagram() }}
-           |${target()} --> ${origin()}: $status
+           |${target()} --> ${origin()}: $response
            |deactivate ${target()}
             """.trimMargin()
 

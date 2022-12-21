@@ -26,6 +26,7 @@ interface CallTree {
     val originActor: TraceActor
     val targetActor: TraceActor
     val request: String
+    val response: String
     val children: List<CallTree>
 }
 
@@ -40,12 +41,13 @@ class HttpCallTree(
     originating: Boolean,
     uri: Uri,
     method: Method,
-    val status: Status,
+    status: Status,
     override val children: List<CallTree>,
     val headers: List<String> = emptyList()
 ) : CallTree, TraceStep {
     override val target = uri.host
     override val request = method.name + " " + uri.path
+    override val response = status.toString()
     override val originActor = if (originating) Person(origin) else Internal(origin)
     override val targetActor = Internal(uri.host)
 }
@@ -56,6 +58,7 @@ class DatabaseCallTree(
 ) : CallTree, TraceStep {
     override val target = "db"
     override val request = methodName
+    override val response = ""
     override val originActor = Internal(origin)
     override val targetActor = Database(target)
     override val children = emptyList<CallTree>()
