@@ -13,7 +13,7 @@ class TracerBullet(private vararg val tracers: Tracer<out CallTree>) {
         val metadataEvents = events.filterIsInstance<MetadataEvent>().removeUnrenderedEvents()
 
         return metadataEvents
-            .filter { it.traces() != null && it.traces().parentSpanId == null }
+            .filter { it.traces() != null && it.traces()?.parentSpanId == null }
             .flatMap { event -> tracers.flatMap { it(event, metadataEvents - event, uberTracer) } }
     }
 

@@ -11,4 +11,4 @@ interface Tracer<T : CallTree> {
 }
 
 fun MetadataEvent.app() = metadata["app"].toString()
-fun MetadataEvent.traces() = (metadata["traces"] as ZipkinTraces)
+fun MetadataEvent.traces() = (metadata["traces"] as? ZipkinTraces)
