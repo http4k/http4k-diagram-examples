@@ -17,6 +17,8 @@ class TraceReportingEvents(
     private val print: Boolean = false
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
 
+    private val renderers = listOf(PumlSequenceDiagram)
+
     private val events = RecordingEvents()
 
     override fun afterTestExecution(context: ExtensionContext) {
@@ -25,20 +27,17 @@ class TraceReportingEvents(
 
             val calls = tracerBullet.filterIsInstance<TraceStep>()
 
-            PumlSequenceDiagram.writePuml(context, calls)
+            renderers.forEach { it.writePuml(context.testMethod.get().name, calls) }
         }
     }
 
-    private fun TraceStepRenderer.writePuml(ec: ExtensionContext, calls: List<TraceStep>) {
+    private fun TraceStepRenderer.writePuml(scenarioName: String, calls: List<TraceStep>) {
         val appTitle = app.value.capitalize().replace('-', ' ')
         val fullTitle = appTitle + (testVariant?.let { " ($testVariant)" } ?: "")
-        val render = render("$fullTitle: " + ec.testMethod.get().name, calls)
+        val render = render("$fullTitle: $scenarioName", calls)
 
-        File(dir.apply { mkdirs() }, render.title + ".puml").writeText(render.content)
+        File(dir.apply { mkdirs() }, "${render.title}.puml").writeText(render.content)
     }
-
-    private fun String.capitalize() =
-        this.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
     override fun toString() = events.toString()
 
@@ -57,7 +56,9 @@ interface SystemDescriptor {
     val name: String
 }
 
-
 data class AppName(val value: String) : SystemDescriptor {
     override val name: String = value
 }
+
+private fun String.capitalize() =
+    replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
