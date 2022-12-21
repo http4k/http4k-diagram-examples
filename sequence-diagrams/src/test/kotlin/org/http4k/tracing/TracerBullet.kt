@@ -1,4 +1,5 @@
 package org.http4k.tracing
+
 import org.http4k.events.Event
 import org.http4k.events.MetadataEvent
 import org.http4k.filter.ZipkinTraces
@@ -29,15 +30,16 @@ class TracerBullet(private vararg val tracers: Tracer<*>) {
             Pair(this, collectEvents)
 
         val collectElements =
-            if (any { it.event == TraceStep.StartRendering }) CollectEvents.drop else CollectEvents.collect
+            if (any { it.event == StartRendering }) CollectEvents.drop else CollectEvents.collect
         return fold(Pair(listOf<MetadataEvent>(), collectElements)) { acc, event ->
             when (acc.second) {
                 CollectEvents.collect -> when (event.event) {
-                    TraceStep.StopRendering -> acc.first.andNext(CollectEvents.drop)
+                    StopRendering -> acc.first.andNext(CollectEvents.drop)
                     else -> (acc.first + event).andNext(CollectEvents.collect)
                 }
+
                 CollectEvents.drop -> when (event.event) {
-                    TraceStep.StartRendering -> acc.first.andNext(CollectEvents.collect)
+                    StartRendering -> acc.first.andNext(CollectEvents.collect)
                     else -> acc.first.andNext(CollectEvents.drop)
                 }
             }

@@ -1,11 +1,5 @@
 package org.http4k.tracing
 
-import org.http4k.tracing.TraceStep.DatabaseCallTree
-import org.http4k.tracing.TraceStep.HttpCallTree
-import org.http4k.tracing.TraceStep.StartInteraction
-import org.http4k.tracing.TraceStep.StartRendering
-import org.http4k.tracing.TraceStep.StopRendering
-
 object PumlSequenceDiagram : TraceStepRenderer {
     override fun render(scenarioName: String, steps: List<TraceStep>): TraceRender {
 
@@ -26,6 +20,7 @@ object PumlSequenceDiagram : TraceStepRenderer {
                         is DatabaseCallTree -> it.asPumlSequenceDiagram()
                         is StartInteraction -> it.asPumlSequenceDiagram()
                         is StartRendering, is StopRendering -> ""
+                        else -> ""
                     }
                 }
             }

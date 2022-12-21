@@ -3,7 +3,7 @@ package org.http4k.tracing
 import org.http4k.events.HttpEvent
 import org.http4k.events.MetadataEvent
 
-object AppHttpTracer : Tracer<TraceStep.HttpCallTree> {
+object AppHttpTracer : Tracer<HttpCallTree> {
     override operator fun invoke(
         parent: MetadataEvent,
         rest: List<MetadataEvent>,
@@ -14,9 +14,9 @@ object AppHttpTracer : Tracer<TraceStep.HttpCallTree> {
     private fun MetadataEvent.toTraceTree(
         rest: List<MetadataEvent>,
         tracer: Tracer<CallTree>
-    ): TraceStep.HttpCallTree {
+    ): HttpCallTree {
         val parentEvent = event as HttpEvent.Outgoing
-        return TraceStep.HttpCallTree(
+        return HttpCallTree(
             app(),
             traces().parentSpanId == null,
             parentEvent.uri.path(parentEvent.xUriTemplate), parentEvent.method, parentEvent.status,

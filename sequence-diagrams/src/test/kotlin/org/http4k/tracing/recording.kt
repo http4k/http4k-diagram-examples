@@ -1,9 +1,12 @@
 package org.http4k.tracing
+
 import org.http4k.core.Method
 import org.http4k.core.Status
 import org.http4k.core.Uri
 import org.http4k.events.Event
-import org.http4k.tracing.TraceActor.*
+import org.http4k.tracing.TraceActor.Database
+import org.http4k.tracing.TraceActor.Internal
+import org.http4k.tracing.TraceActor.Person
 import java.util.Locale
 
 
@@ -31,43 +34,43 @@ private val interestingHeaders = setOf("Authorization", "User-Agent", "Cookie", 
 
 object InterestingHeadersOnly : (String) -> Boolean by { it in interestingHeaders }
 
-sealed class TraceStep {
-    data class HttpCallTree(
-        private val origin: String,
-        private val originating: Boolean,
-        val uri: Uri,
-        val method: Method,
-        val status: Status,
-        override val children: List<CallTree>,
-        val headers: List<String> = emptyList(),
-    ) : TraceStep(), CallTree {
-        override fun origin() = origin.toLabel()
-        override fun target() = uri.host.toLabel()
-        override fun describe() = method.name + " " + uri.path
-        override fun originActor() = if (originating) Person(origin()) else Internal(origin())
-        override fun targetActor() = Internal(target())
-    }
+interface TraceStep
 
-    data class DatabaseCallTree(
-        private val origin: String,
-        private val methodName: String,
-    ) : TraceStep(), CallTree {
-        override fun origin() = origin.toLabel()
-        override fun target() = "db"
-        override fun describe() = methodName
-        override fun originActor() = Internal(origin())
-        override fun targetActor() = Database(target())
-        override val children = emptyList<CallTree>()
-    }
-
-    data class StartInteraction(
-        val origin: String,
-        val interactionName: String
-    ) : TraceStep(), Event
-
-    object StartRendering : TraceStep(), Event
-    object StopRendering : TraceStep(), Event
+data class HttpCallTree(
+    private val origin: String,
+    private val originating: Boolean,
+    val uri: Uri,
+    val method: Method,
+    val status: Status,
+    override val children: List<CallTree>,
+    val headers: List<String> = emptyList(),
+) : TraceStep, CallTree {
+    override fun origin() = origin.toLabel()
+    override fun target() = uri.host.toLabel()
+    override fun describe() = method.name + " " + uri.path
+    override fun originActor() = if (originating) Person(origin()) else Internal(origin())
+    override fun targetActor() = Internal(target())
 }
+
+data class DatabaseCallTree(
+    private val origin: String,
+    private val methodName: String,
+) : TraceStep, CallTree {
+    override fun origin() = origin.toLabel()
+    override fun target() = "db"
+    override fun describe() = methodName
+    override fun originActor() = Internal(origin())
+    override fun targetActor() = Database(target())
+    override val children = emptyList<CallTree>()
+}
+
+data class StartInteraction(
+    val origin: String,
+    val interactionName: String
+) : TraceStep, Event
+
+object StartRendering : TraceStep, Event
+object StopRendering : TraceStep, Event
 
 private fun String.toLabel() =
     (if (contains(".")) substringBefore('.') else this)
