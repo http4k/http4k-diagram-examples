@@ -58,7 +58,7 @@ object PumlSequenceDiagram : TraceStepRenderer {
     }
 
     private fun HttpCallTree.asPumlSequenceDiagram(): String = """
-           |${origin()} -> ${target()}: $method ${uri.path} ${describeHeaders()}
+           |${origin()} -> ${target()}: $request ${describeHeaders()}
            |activate ${target()}
            |${children.joinToString("\n") { it.asPumlSequenceDiagram() }}
            |${target()} --> ${origin()}: $status
@@ -70,7 +70,7 @@ object PumlSequenceDiagram : TraceStepRenderer {
         .takeIf { it.isNotEmpty() }?.joinToString(prefix = "[", postfix = "]") ?: ""
 
     private fun DatabaseCallTree.asPumlSequenceDiagram(): String = """
-           |${origin()} <-> ${target()}: $describe
+           |${origin()} <-> ${target()}: $request
             """.trimMargin()
 
     private fun StartInteraction.asPumlSequenceDiagram(): String = """
