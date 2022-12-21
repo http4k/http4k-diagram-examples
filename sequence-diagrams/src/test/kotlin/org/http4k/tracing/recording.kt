@@ -20,14 +20,14 @@ sealed class TraceActor(private val index: Int) : Comparable<TraceActor> {
     data class External(override val name: String) : TraceActor(4)
 }
 
-abstract class CallTree(
-    val origin: String,
-    val target: String,
-    val originActor: TraceActor,
-    val targetActor: TraceActor,
-    val describe: String,
+interface CallTree {
+    val origin: String
+    val target: String
+    val originActor: TraceActor
+    val targetActor: TraceActor
+    val describe: String
     val children: List<CallTree>
-)
+}
 
 private val interestingHeaders = setOf("Authorization", "User-Agent", "Cookie", "Set-Cookie", "RequesterId")
 
@@ -36,33 +36,31 @@ object InterestingHeadersOnly : (String) -> Boolean by { it in interestingHeader
 interface TraceStep
 
 class HttpCallTree(
-    origin: String,
+    override val origin: String,
     originating: Boolean,
     val uri: Uri,
     val method: Method,
     val status: Status,
-    children: List<CallTree>,
+    override val children: List<CallTree>,
     val headers: List<String> = emptyList()
-) : CallTree(
-    origin = origin,
-    target = uri.host,
-    describe = method.name + " " + uri.path,
-    originActor = if (originating) Person(origin) else Internal(origin),
-    targetActor = Internal(uri.host),
-    children = children
-), TraceStep
+) : CallTree, TraceStep {
+    override val target = uri.host
+    override val describe = method.name + " " + uri.path
+    override val originActor = if (originating) Person(origin) else Internal(origin)
+    override val targetActor = Internal(uri.host)
+}
 
 class DatabaseCallTree(
-    origin: String,
+    override val origin: String,
     methodName: String,
-) : CallTree(
-    origin = origin,
-    target = "db",
-    describe = methodName,
-    originActor = Internal(origin),
-    targetActor = Database("db"),
-    children = emptyList(),
-), TraceStep
+) : CallTree, TraceStep {
+    override val target = "db"
+    override val describe = methodName
+    override val originActor = Internal(origin)
+    override val targetActor = Database(target)
+    override val children = emptyList<CallTree>()
+}
+
 
 data class StartInteraction(
     val origin: String,
