@@ -7,6 +7,7 @@ import org.http4k.events.then
 import org.http4k.testing.RecordingEvents
 import org.http4k.tracing.renderer.PumlSequenceDiagram
 import org.http4k.tracing.renderer.TraceStepRenderer
+import org.http4k.tracing.util.capitalize
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import java.io.File
@@ -41,11 +42,10 @@ class TraceReportingEvents(
 
     override fun toString() = events.toString()
 
-    override fun invoke(p1: Event) =
-        when {
-            print -> events.then { println(it) }(p1)
-            else -> events(p1)
-        }
+    override fun invoke(p1: Event) = when {
+        print -> events.then { println(it) }(p1)
+        else -> events(p1)
+    }
 
     override fun iterator() = events
         .map { if (it is MetadataEvent) it.event else it }
