@@ -9,8 +9,12 @@ import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
 import org.http4k.hamkrest.hasBody
-import org.http4k.tracing.*
-import org.http4k.tracing.TraceStep.StopRendering
+import org.http4k.tracing.AppEvents
+import org.http4k.tracing.AppName
+import org.http4k.tracing.AppOutgoingHttp
+import org.http4k.tracing.StopRendering
+import org.http4k.tracing.TraceReportingEvents
+import org.http4k.tracing.TracedActorHttp
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
