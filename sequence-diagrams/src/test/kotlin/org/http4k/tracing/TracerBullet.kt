@@ -11,15 +11,11 @@ class TracerBullet(private vararg val tracers: Tracer<out CallTree>) {
 
     operator fun invoke(events: List<Event>): List<CallTree> {
         val metadataEvents = events.filterIsInstance<MetadataEvent>().removeUnrenderedEvents()
+        val uberTracer = Tracer.TreeWalker(tracers.toList())
 
         return metadataEvents
             .filter { it.traces()?.let { it.parentSpanId == null } ?: false }
             .flatMap { event -> tracers.flatMap { it(event, metadataEvents - event, uberTracer) } }
-    }
-
-    private val uberTracer = object : Tracer<CallTree> {
-        override operator fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer<CallTree>) =
-            tracers.flatMap { it(parent, rest - parent, this) }
     }
 }
 
