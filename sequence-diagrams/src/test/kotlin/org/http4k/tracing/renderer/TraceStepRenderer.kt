@@ -1,4 +1,6 @@
-package org.http4k.tracing
+package org.http4k.tracing.renderer
+
+import org.http4k.tracing.TraceStep
 
 fun interface TraceStepRenderer {
     fun render(scenarioName: String, steps: List<TraceStep>): TraceRender

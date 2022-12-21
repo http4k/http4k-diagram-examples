@@ -5,6 +5,8 @@ import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
 import org.http4k.testing.RecordingEvents
+import org.http4k.tracing.renderer.PumlSequenceDiagram
+import org.http4k.tracing.renderer.TraceStepRenderer
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import java.io.File
@@ -14,10 +16,9 @@ class TraceReportingEvents(
     private val app: AppName,
     private val testVariant: String? = null,
     private val dir: File = File(".generated/diagrams"),
-    private val print: Boolean = false
+    private val print: Boolean = false,
+    private val renderers: List<TraceStepRenderer> = listOf(PumlSequenceDiagram)
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
-
-    private val renderers = listOf(PumlSequenceDiagram)
 
     private val events = RecordingEvents()
 

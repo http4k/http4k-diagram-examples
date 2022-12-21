@@ -1,4 +1,14 @@
-package org.http4k.tracing
+package org.http4k.tracing.renderer
+
+import org.http4k.tracing.CallTree
+import org.http4k.tracing.DatabaseCallTree
+import org.http4k.tracing.HttpCallTree
+import org.http4k.tracing.InterestingHeadersOnly
+import org.http4k.tracing.StartInteraction
+import org.http4k.tracing.StartRendering
+import org.http4k.tracing.StopRendering
+import org.http4k.tracing.TraceActor
+import org.http4k.tracing.TraceStep
 
 object PumlSequenceDiagram : TraceStepRenderer {
     override fun render(scenarioName: String, steps: List<TraceStep>): TraceRender {
