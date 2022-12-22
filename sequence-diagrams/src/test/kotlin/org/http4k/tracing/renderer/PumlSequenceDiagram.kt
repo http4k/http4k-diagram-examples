@@ -1,19 +1,18 @@
 package org.http4k.tracing.renderer
 
-import org.http4k.tracing.CallTree
-import org.http4k.tracing.DatabaseCallTree
-import org.http4k.tracing.HttpCallTree
-import org.http4k.tracing.InterestingHeadersOnly
+import org.example.tracing.DatabaseTrace
+import org.http4k.tracing.HttpTrace
 import org.http4k.tracing.StartInteraction
 import org.http4k.tracing.StartRendering
 import org.http4k.tracing.StopRendering
+import org.http4k.tracing.Trace
 import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TraceStep
 
 object PumlSequenceDiagram : TraceStepRenderer {
     override fun render(scenarioName: String, steps: List<TraceStep>): TraceRender {
 
-        val actors = steps.filterIsInstance<CallTree>()
+        val actors = steps.filterIsInstance<Trace>()
             .flatMap { it.actors() }
             .toSet()
             .sorted()
@@ -26,8 +25,8 @@ object PumlSequenceDiagram : TraceStepRenderer {
             |${
                 steps.joinToString("\n") {
                     when (it) {
-                        is HttpCallTree -> it.asPumlSequenceDiagram()
-                        is DatabaseCallTree -> it.asPumlSequenceDiagram()
+                        is HttpTrace -> it.asPumlSequenceDiagram()
+                        is DatabaseTrace -> it.asPumlSequenceDiagram()
                         is StartInteraction -> it.asPumlSequenceDiagram()
                         is StartRendering, is StopRendering -> ""
                         else -> ""
@@ -37,39 +36,33 @@ object PumlSequenceDiagram : TraceStepRenderer {
     @enduml""".trimMargin())
     }
 
-    private fun CallTree.actors(): Set<TraceActor> =
+    private fun Trace.actors(): Set<TraceActor> =
         (listOf(originActor, targetActor) + children.flatMap { it.actors() }).toSet()
 
     private fun Iterable<TraceActor>.toPumlActor() =
         fold(emptyList<String>()) { acc, next ->
             val nextVal = when (next) {
                 is TraceActor.Database -> "database"
-                is TraceActor.External -> "participant"
-                is TraceActor.Internal -> "participant"
-                is TraceActor.Person -> "participant"
+                else -> "participant"
             } + " \"${next.name}\""
             if (acc.contains(nextVal)) acc else acc + nextVal
         }
 
-    private fun CallTree.asPumlSequenceDiagram() = when (this) {
-        is HttpCallTree -> asPumlSequenceDiagram()
-        is DatabaseCallTree -> asPumlSequenceDiagram()
+    private fun Trace.asPumlSequenceDiagram() = when (this) {
+        is HttpTrace -> asPumlSequenceDiagram()
+        is DatabaseTrace -> asPumlSequenceDiagram()
         else -> ""
     }
 
-    private fun HttpCallTree.asPumlSequenceDiagram(): String = """
-           |"$origin" -> "$target": $request ${describeHeaders()}
+    private fun HttpTrace.asPumlSequenceDiagram(): String = """
+           |"$origin" -> "$target": ${request}
            |activate "$target"
            |${children.joinToString("\n") { it.asPumlSequenceDiagram() }}
            |"$target" --> "$origin": $response
            |deactivate "$target"
             """.trimMargin()
 
-    private fun HttpCallTree.describeHeaders() = headers
-        .filter(InterestingHeadersOnly)
-        .takeIf { it.isNotEmpty() }?.joinToString(prefix = "[", postfix = "]") ?: ""
-
-    private fun DatabaseCallTree.asPumlSequenceDiagram(): String = """
+    private fun DatabaseTrace.asPumlSequenceDiagram(): String = """
            |"$origin" <-> "$target": $request
             """.trimMargin()
 

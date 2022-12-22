@@ -11,9 +11,8 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
-import org.http4k.tracing.AppIncomingHttp
 
-fun pingApp() = AppIncomingHttp()
+fun pingApp(): HttpHandler = AppIncomingHttp()
     .then(routes(
         "/ping" bind GET to {
             Response(OK).body("pong")

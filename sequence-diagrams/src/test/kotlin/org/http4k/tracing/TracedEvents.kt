@@ -5,30 +5,28 @@ import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
 import org.http4k.testing.RecordingEvents
-import org.http4k.tracing.renderer.PumlSequenceDiagram
 import org.http4k.tracing.renderer.TraceStepRenderer
 import org.http4k.tracing.util.capitalize
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import java.io.File
 
-class TraceReportingEvents(
+class TracedEvents(
     private val app: AppName,
     private val testVariant: String? = null,
     private val dir: File = File(".generated/diagrams"),
     private val print: Boolean = false,
-    private val renderers: List<TraceStepRenderer> = listOf(PumlSequenceDiagram)
+    private val tracerBullet: TracerBullet,
+    private val renderers: List<TraceStepRenderer>
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
 
     private val events = RecordingEvents()
 
     override fun afterTestExecution(context: ExtensionContext) {
         if (context.executionException.isEmpty) {
-            val tracerBullet = TracerBullet(AppHttpTracer)(events.toList())
+            val traces = tracerBullet(events.toList()).filterIsInstance<TraceStep>()
 
-            val calls = tracerBullet.filterIsInstance<TraceStep>()
-
-            renderers.forEach { it.writePuml(context.testMethod.get().name, calls) }
+            renderers.forEach { it.writePuml(context.testMethod.get().name, traces) }
         }
     }
 

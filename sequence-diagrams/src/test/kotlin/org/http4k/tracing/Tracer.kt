@@ -6,15 +6,15 @@ import org.http4k.filter.ZipkinTraces
 /**
  * Implement this to define custom Trace Event types - eg. writing to a database or sending a message
  */
-fun interface Tracer<T : CallTree> {
-    operator fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer<CallTree>): List<T>
+fun interface Tracer {
+    operator fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer): List<Trace>
 
     companion object {
-        fun TreeWalker(tracers: List<Tracer<out CallTree>>) = object : Tracer<CallTree> {
+        fun TreeWalker(tracers: List<Tracer>) = object : Tracer {
             override operator fun invoke(
                 parent: MetadataEvent,
                 rest: List<MetadataEvent>,
-                tracer: Tracer<CallTree>
+                tracer: Tracer
             ) = tracers.flatMap { it(parent, rest - parent, this) }
         }
     }

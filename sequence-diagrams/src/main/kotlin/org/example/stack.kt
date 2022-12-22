@@ -1,4 +1,4 @@
-package org.http4k.tracing
+package org.example
 
 import org.http4k.core.Filter
 import org.http4k.core.NoOp

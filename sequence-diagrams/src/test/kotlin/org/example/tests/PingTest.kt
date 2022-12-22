@@ -1,6 +1,11 @@
-package org.example
+package org.example.tests
 
 import com.natpryce.hamkrest.assertion.assertThat
+import org.example.AppOutgoingHttp
+import org.example.indirectPingApp
+import org.example.pingApp
+import org.example.tracing.AppEvents
+import org.example.tracing.CustomTracedEvents
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
@@ -9,11 +14,8 @@ import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
 import org.http4k.hamkrest.hasBody
-import org.http4k.tracing.AppEvents
 import org.http4k.tracing.AppName
-import org.http4k.tracing.AppOutgoingHttp
 import org.http4k.tracing.StopRendering
-import org.http4k.tracing.TraceReportingEvents
 import org.http4k.tracing.TracedActorHttp
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
@@ -22,7 +24,7 @@ class PingTest {
 
     // generates PlantUML diagrams in .generated/diagrams
     @RegisterExtension
-    val events = TraceReportingEvents(AppName("sequence-diagram-example"))
+    val events = CustomTracedEvents(AppName("sequence-diagram-example"))
 
     private val pingServer = pingApp()
     private val pingClient = AppOutgoingHttp(AppEvents(AppName("another-server")).then(events)).then(pingServer)
@@ -70,4 +72,3 @@ class UserAsActor(evens: Events, ping: HttpHandler, indirectPing: HttpHandler) {
         ping()
     }
 }
-
