@@ -5,19 +5,18 @@ import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
 import org.http4k.testing.RecordingEvents
-import org.http4k.tracing.renderer.TraceStepRenderer
+import org.http4k.tracing.renderer.TraceRenderer
 import org.http4k.tracing.util.capitalize
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-import java.io.File
 
 class TracedEvents(
     private val app: AppName,
     private val testVariant: String? = null,
-    private val dir: File = File(".generated/diagrams"),
+    private val persistence: TracePersistence,
     private val print: Boolean = false,
     private val tracerBullet: TracerBullet,
-    private val renderers: List<TraceStepRenderer>
+    private val renderers: List<TraceRenderer>
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
 
     private val events = RecordingEvents()
@@ -30,12 +29,12 @@ class TracedEvents(
         }
     }
 
-    private fun TraceStepRenderer.writePuml(scenarioName: String, calls: List<TraceStep>) {
+    private fun TraceRenderer.writePuml(scenarioName: String, calls: List<TraceStep>) {
         val appTitle = app.value.capitalize().replace('-', ' ')
         val fullTitle = appTitle + (testVariant?.let { " ($testVariant)" } ?: "")
         val render = render("$fullTitle: $scenarioName", calls)
+        persistence(render)
 
-        File(dir.apply { mkdirs() }, "${render.title}.puml").writeText(render.content)
     }
 
     override fun toString() = events.toString()

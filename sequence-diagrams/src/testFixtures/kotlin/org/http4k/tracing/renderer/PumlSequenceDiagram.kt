@@ -9,7 +9,7 @@ import org.http4k.tracing.Trace
 import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TraceStep
 
-object PumlSequenceDiagram : TraceStepRenderer {
+object PumlSequenceDiagram : TraceRenderer {
     override fun render(scenarioName: String, steps: List<TraceStep>): TraceRender {
 
         val actors = steps.filterIsInstance<Trace>()
@@ -33,7 +33,8 @@ object PumlSequenceDiagram : TraceStepRenderer {
                     }
                 }
             }
-    @enduml""".trimMargin())
+    @enduml""".trimMargin(),
+            "PUML")
     }
 
     private fun Trace.actors(): Set<TraceActor> =

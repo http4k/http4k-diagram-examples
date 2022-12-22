@@ -2,7 +2,6 @@ package org.http4k.tracing
 
 import org.http4k.events.Event
 
-
 sealed class TraceActor(private val index: Int) : Comparable<TraceActor> {
     override fun compareTo(other: TraceActor) = index.compareTo(other.index)
 
