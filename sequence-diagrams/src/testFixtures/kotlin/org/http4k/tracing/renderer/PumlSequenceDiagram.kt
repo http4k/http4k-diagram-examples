@@ -1,6 +1,6 @@
 package org.http4k.tracing.renderer
 
-import org.example.tracing.DatabaseTrace
+import org.http4k.tracing.DatabaseTrace
 import org.http4k.tracing.HttpTrace
 import org.http4k.tracing.StartInteraction
 import org.http4k.tracing.StartRendering

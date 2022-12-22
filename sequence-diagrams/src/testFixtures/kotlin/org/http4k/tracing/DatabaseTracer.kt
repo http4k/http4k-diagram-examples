@@ -1,12 +1,7 @@
-package org.example.tracing
+package org.http4k.tracing
 
 import org.example.DatabaseCall
 import org.http4k.events.MetadataEvent
-import org.http4k.tracing.Trace
-import org.http4k.tracing.TraceActor
-import org.http4k.tracing.TraceStep
-import org.http4k.tracing.Tracer
-import org.http4k.tracing.app
 
 object DatabaseTracer : Tracer {
     override fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer) =

@@ -6,6 +6,7 @@ import org.example.indirectPingApp
 import org.example.pingApp
 import org.example.tracing.AppEvents
 import org.example.tracing.CustomTracedEvents
+import org.example.tracing.TracedActorHttp
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
@@ -16,7 +17,6 @@ import org.http4k.events.then
 import org.http4k.hamkrest.hasBody
 import org.http4k.tracing.AppName
 import org.http4k.tracing.StopRendering
-import org.http4k.tracing.TracedActorHttp
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 

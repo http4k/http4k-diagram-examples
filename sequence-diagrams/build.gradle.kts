@@ -9,8 +9,10 @@ dependencies {
     implementation(Http4k.format.jackson)
     implementation(Http4k.client.okhttp)
     implementation(Http4k.server.undertow)
-    testImplementation(Http4k.testing.hamkrest)
-    testImplementation(Http4k.testing.approval)
-    testImplementation(Testing.junit.jupiter.api)
-    testImplementation(Testing.junit.jupiter.engine)
+
+    testFixturesApi(Http4k.testing.hamkrest)
+    testFixturesApi(Http4k.testing.hamkrest)
+    testFixturesApi(Http4k.testing.approval)
+    testFixturesApi(Testing.junit.jupiter.api)
+    testFixturesApi(Testing.junit.jupiter.engine)
 }

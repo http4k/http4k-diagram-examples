@@ -12,8 +12,13 @@ buildscript {
     }
 }
 
+plugins {
+    `java-test-fixtures`
+}
+
 subprojects {
     apply(plugin = "kotlin")
+    apply(plugin = "java-test-fixtures")
 
     repositories {
         mavenCentral()
