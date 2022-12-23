@@ -6,7 +6,7 @@ import org.http4k.core.Uri
 import org.http4k.events.HttpEvent
 import org.http4k.events.MetadataEvent
 
-object HttpTracer : Tracer {
+fun HttpTracer(origin: OriginNamer) = object : Tracer {
     override operator fun invoke(
         parent: MetadataEvent,
         rest: List<MetadataEvent>,
@@ -18,14 +18,14 @@ object HttpTracer : Tracer {
     private fun MetadataEvent.toTrace(rest: List<MetadataEvent>, tracer: Tracer): Trace {
         val parentEvent = event as HttpEvent.Outgoing
         return Trace.Http(
-            app(),
+            origin(this),
             traces()?.parentSpanId == null,
             parentEvent.uri.path(parentEvent.xUriTemplate),
             parentEvent.method,
             parentEvent.status,
             rest
                 .filter { it.traces() != null && traces()?.spanId == it.traces()?.parentSpanId }
-                .filter { (event as HttpEvent).uri.host == it.app() }
+                .filter { (event as HttpEvent).uri.host == origin(it) }
                 .flatMap { tracer(it, rest - it, tracer) },
             emptyList()
         )
