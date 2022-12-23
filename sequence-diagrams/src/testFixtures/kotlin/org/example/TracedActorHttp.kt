@@ -13,5 +13,5 @@ fun TracedActorHttp(
     events: Events,
     clock: Clock = Clock.systemUTC()
 ) = object : HttpHandler by ResetRequestTracing()
-    .then(AppOutgoingHttp(AppEvents(AppName(actorName)).then(events), clock))
+    .then(AppOutgoingHttp(AppEvents(actorName).then(events), clock))
     .then(rawHttp) {}

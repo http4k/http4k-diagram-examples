@@ -9,15 +9,13 @@ import org.http4k.tracing.persistence.FileSystem
 import org.http4k.tracing.renderer.PumlSequenceDiagram
 import java.io.File
 
-fun CustomTracedEvents(app: AppName, testVariant: String? = null): TracedEvents {
-    return TracedEvents(
-        app,
-        testVariant,
-        TraceRenderPersistence.FileSystem(File(".generated/diagrams")),
-        TracerBullet(HttpTracer, DatabaseTracer, DomainEventTracer),
-        listOf(PumlSequenceDiagram),
-        tracePersistence
-    )
-}
+fun CustomTracedEvents(app: String, testVariant: String? = null) = TracedEvents(
+    app,
+    testVariant,
+    TraceRenderPersistence.FileSystem(File(".generated/diagrams")),
+    TracerBullet(HttpTracer, DatabaseTracer, DomainEventTracer),
+    listOf(PumlSequenceDiagram),
+    FILE_TRACE_PERSISTENCE
+)
 
-val tracePersistence = TracePersistence.FileSystem(File("build/traces"))
+val FILE_TRACE_PERSISTENCE = TracePersistence.FileSystem(File("build/traces"))
