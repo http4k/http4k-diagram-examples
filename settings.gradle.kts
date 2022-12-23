@@ -4,4 +4,5 @@ plugins {
 
 rootProject.name = "http4k-diagram-examples"
 
+include("lib")
 include("sequence-diagrams")
