@@ -5,5 +5,5 @@ import java.io.File
 import java.util.Locale
 
 fun TraceRenderPersistence.Companion.FileSystem(dir: File) = TraceRenderPersistence {
-    File(dir.apply { mkdirs() }, "${it.title}.${it.identifier.lowercase(Locale.getDefault())}").writeText(it.content)
+    File(dir.apply { mkdirs() }, "${it.title}.${it.format.lowercase(Locale.getDefault())}").writeText(it.content)
 }

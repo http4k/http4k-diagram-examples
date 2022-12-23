@@ -1,0 +1,18 @@
+@startuml
+title foobar
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+
+System(a, "a")
+System(b, "b")
+System(c, "c")
+ContainerDb(db, "db")
+System(events, "events")
+System(external, "external")    
+Rel_D(a, b, " ") 
+Rel_D(a, events, " ") 
+Rel_D(b, c, " ") 
+Rel_D(b, db, " ") 
+Rel_D(c, external, " ")     
+@enduml

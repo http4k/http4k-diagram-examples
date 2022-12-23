@@ -1,0 +1,12 @@
+@startuml
+title Sequence diagram example: Indirect ping test
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+
+Person(John Doe, "John Doe")
+Container(another-server, "another-server")
+Container(a-server, "a-server")    
+Rel_D(John Doe, another-server, "1. GET indirect-ping ")
+Rel_D(another-server, a-server, "2. GET ping ")    
+@enduml

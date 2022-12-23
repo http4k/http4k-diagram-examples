@@ -1,0 +1,18 @@
+@startuml
+title foobar
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+
+Container(a, "a")
+Container(b, "b")
+Container(c, "c")
+ContainerDb(db, "db")
+Container(events, "events")
+Container(external, "external")    
+Rel_D(a, b, "1. req")
+Rel_D(a, events, "2. event a")
+Rel_D(b, c, "3. b-to-c req")
+Rel_D(b, db, "4. bidi-b req-resp")
+Rel_D(c, external, "5. c-to-external req")    
+@enduml

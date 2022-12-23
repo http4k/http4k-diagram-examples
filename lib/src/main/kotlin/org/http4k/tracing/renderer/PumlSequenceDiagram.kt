@@ -21,6 +21,7 @@ object PumlSequenceDiagram : TraceRenderer {
 
         return TraceRender(
             "$scenarioName - Sequence",
+            "PUML",
             """@startuml
             |title $scenarioName
             |${actors.toPumlActor().joinToString("\n")}
@@ -35,8 +36,7 @@ object PumlSequenceDiagram : TraceRenderer {
                     }
                 }
             }
-    @enduml""".trimMargin(),
-            "PUML")
+    @enduml""".trimMargin())
     }
 
     private fun Trace.actors(): Set<TraceActor> =
