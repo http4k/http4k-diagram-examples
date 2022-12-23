@@ -7,8 +7,9 @@ class CombineAllTracesTest {
 
     @Test
     fun `combine into one list`() {
-        FILE_TRACE_PERSISTENCE.load().forEach {
-            FILE_TRACE_RENDER_PERSISTENCE(PumlInteractionDiagram.render(it.name, it.traces))
-        }
+        FILE_TRACE_RENDER_PERSISTENCE(
+            PumlInteractionDiagram.render("Combined",
+                FILE_TRACE_PERSISTENCE.load().flatMap { it.traces })
+        )
     }
 }

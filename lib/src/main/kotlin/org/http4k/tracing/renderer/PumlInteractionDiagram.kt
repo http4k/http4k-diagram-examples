@@ -50,5 +50,3 @@ ${relations.joinToString("\n") { "Rel_D(${it.origin.identifier()}, ${it.target.i
 
     private data class Call(val origin: String, val target: String)
 }
-
-fun String.identifier() = this

@@ -4,7 +4,7 @@ title Sequence diagram example: Ignored interactions
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
-Person(John Doe, "John Doe")
-Container(a-server, "a-server")    
-Rel_D(John Doe, a-server, "1. GET ping ")    
+Person(JohnDoe, "John Doe")
+Container(aserver, "a-server")    
+Rel_D(JohnDoe, aserver, "1. GET ping ")    
 @enduml
