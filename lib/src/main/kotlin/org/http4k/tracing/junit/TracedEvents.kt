@@ -8,7 +8,7 @@ import org.http4k.tracing.NamedTrace
 import org.http4k.tracing.TracePersistence
 import org.http4k.tracing.TraceRenderPersistence
 import org.http4k.tracing.TraceRenderer
-import org.http4k.tracing.TraceStep
+import org.http4k.tracing.Tracer
 import org.http4k.tracing.TracerBullet
 import org.http4k.tracing.capitalize
 import org.http4k.tracing.persistence.InMemory
@@ -18,11 +18,18 @@ import org.junit.jupiter.api.extension.ExtensionContext
 class TracedEvents(
     private val title: String,
     private val testVariant: String?,
-    private val persistence: TraceRenderPersistence,
-    private val tracerBullet: TracerBullet,
+    tracers: List<Tracer>,
     private val renderers: List<TraceRenderer>,
+    private val persistence: TraceRenderPersistence,
     private val tracePersistence: TracePersistence = TracePersistence.InMemory()
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
+
+    private val fullTitle = run {
+        val baseTitle = title.capitalize().replace('-', ' ')
+        baseTitle + (testVariant?.let { " ($testVariant)" } ?: "")
+    }
+
+    private val tracerBullet = TracerBullet(tracers)
 
     private val events = RecordingEvents()
 
@@ -31,14 +38,10 @@ class TracedEvents(
             val traces = tracerBullet(events.toList())
 
             tracePersistence.store(NamedTrace(context.testMethod.get().name, traces))
-            renderers.forEach { it.write(context.testMethod.get().name, traces) }
+            renderers.forEach {
+                persistence(it.render("$fullTitle: ${context.testMethod.get().name}", traces))
+            }
         }
-    }
-
-    private fun TraceRenderer.write(scenarioName: String, calls: List<TraceStep>) {
-        val appTitle = title.capitalize().replace('-', ' ')
-        val fullTitle = appTitle + (testVariant?.let { " ($testVariant)" } ?: "")
-        persistence(render("$fullTitle: $scenarioName", calls))
     }
 
     override fun toString() = events.toString()

@@ -9,10 +9,10 @@ import org.http4k.tracing.CollectEvents.drop
  * Entry--point for creating Trace from a list of MetadataEvents. Provide a Tracer for each of the
  * implementations that you want to support.
  */
-class TracerBullet(private vararg val tracers: Tracer) {
+class TracerBullet(private val tracers: List<Tracer>) {
     operator fun invoke(events: List<Event>): List<Trace> {
         val metadataEvents = events.filterIsInstance<MetadataEvent>().removeUnrenderedEvents()
-        val uberTracer = Tracer.TreeWalker(tracers.toList())
+        val uberTracer = Tracer.TreeWalker(tracers)
 
         return metadataEvents
             .filter { it.traces()?.let { it.parentSpanId == null } ?: false }
