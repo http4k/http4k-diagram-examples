@@ -4,7 +4,7 @@ title PUML example (manual): Indirect ping test
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
-Person(JohnDoe, "John Doe")
+Container(JohnDoe, "John Doe")
 Container(anotherserver, "another-server")
 Container(aserver, "a-server")    
 Rel_D(JohnDoe, anotherserver, "1. GET indirect-ping ")

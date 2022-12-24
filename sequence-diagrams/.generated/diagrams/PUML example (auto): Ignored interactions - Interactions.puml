@@ -4,7 +4,7 @@ title PUML example (auto): Ignored interactions
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
-Person(JohnDoe, "John Doe")
+System(JohnDoe, "John Doe")
 System(aserver, "a-server")    
 Rel_D(JohnDoe, aserver, " ")     
 @enduml
