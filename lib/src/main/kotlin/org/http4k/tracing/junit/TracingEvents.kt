@@ -5,12 +5,16 @@ import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.testing.RecordingEvents
 import org.http4k.tracing.NamedTrace
+import org.http4k.tracing.StartRendering
+import org.http4k.tracing.StopRendering
 import org.http4k.tracing.TracePersistence
 import org.http4k.tracing.TraceRenderPersistence
 import org.http4k.tracing.TraceRenderer
 import org.http4k.tracing.Tracer
 import org.http4k.tracing.TracerBullet
 import org.http4k.tracing.capitalize
+import org.http4k.tracing.junit.RecordingMode.AUTO
+import org.http4k.tracing.junit.RecordingMode.MANUAL
 import org.http4k.tracing.persistence.InMemory
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -21,6 +25,7 @@ class TracingEvents(
     tracers: List<Tracer>,
     private val renderers: List<TraceRenderer>,
     private val persistence: TraceRenderPersistence,
+    private val mode: RecordingMode = AUTO,
     private val tracePersistence: TracePersistence = TracePersistence.InMemory()
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
 
@@ -31,7 +36,9 @@ class TracingEvents(
 
     private val tracerBullet = TracerBullet(tracers)
 
-    private val events = RecordingEvents()
+    private val events = RecordingEvents().apply {
+        if (mode == MANUAL) this(MetadataEvent(StopRendering))
+    }
 
     override fun afterTestExecution(context: ExtensionContext) {
         if (context.executionException.isEmpty) {
@@ -42,6 +49,12 @@ class TracingEvents(
                 persistence(it.render("$fullTitle: ${context.testMethod.get().name}", traces))
             }
         }
+    }
+
+    fun use(block: () -> Unit) {
+        events(MetadataEvent(StartRendering))
+        block()
+        events(MetadataEvent(StopRendering))
     }
 
     override fun toString() = events.toString()
