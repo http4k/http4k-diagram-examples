@@ -10,6 +10,7 @@ import java.time.Clock
 
 fun AppIncomingHttp() = ServerFilters.RequestTracing()
 
-fun AppOutgoingHttp(events: Events, clock: Clock = Clock.systemUTC()) =
-    ReportHttpTransaction(clock) { events(HttpEvent.Outgoing(it))
-    }.then(RequestTracing())
+fun AppOutgoingHttp(events: Events) = ReportHttpTransaction(Clock.systemUTC()) {
+    events(HttpEvent.Outgoing(it))
+}
+    .then(RequestTracing())
