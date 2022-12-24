@@ -6,10 +6,10 @@ import org.http4k.events.Event
 import org.http4k.events.EventFilters.AddZipkinTraces
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
+import org.http4k.tracing.Actor
 import org.http4k.tracing.ActorType.System
 import org.http4k.tracing.FireAndForget
 import org.http4k.tracing.ScenarioTraces
-import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TracePersistence
 import org.http4k.tracing.TraceRender
 import org.http4k.tracing.TraceRenderer
@@ -137,9 +137,8 @@ private class FakeEC : ExtensionContext by proxy() {
 private fun toTrace(event: Event): FireAndForget {
     val name = event.javaClass.simpleName
     return FireAndForget(
-        name, "target",
-        TraceActor(name, System),
-        TraceActor("target", System),
+        Actor(name, System),
+        Actor("target", System),
         "req",
         emptyList()
     )

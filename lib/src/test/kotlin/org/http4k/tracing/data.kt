@@ -5,67 +5,53 @@ import org.http4k.tracing.ActorType.Human
 import org.http4k.tracing.ActorType.System
 
 val c_to_external = RequestResponse(
-    "c",
-    "external",
-    TraceActor("c", System),
-    TraceActor("external", System),
+    Actor("c", System),
+    Actor("external", System),
     "c-to-external req",
     "c-to-external resp",
     listOf()
 )
 
 val bidi_b = BiDirectional(
-    "b",
-    "db",
-    TraceActor("b", System),
-    TraceActor("db", Database),
+    Actor("b", System),
+    Actor("db", Database),
     "bidi-b req-resp",
     listOf()
 )
 
 val b_to_c = RequestResponse(
-    "b",
-    "c",
-    TraceActor("b", System),
-    TraceActor("c", System),
+    Actor("b", System),
+    Actor("c", System),
     "b-to-c req",
     "b-to-c resp",
     listOf(bidi_b, c_to_external)
 )
 
 val fireAndForget_user1 = FireAndForget(
-    "user1",
-    "events",
-    TraceActor("user1", Human),
-    TraceActor("events", System),
+    Actor("user1", Human),
+    Actor("events", System),
     "event a",
     listOf()
 )
 
 val entire_trace_1 = RequestResponse(
-    "user1",
-    "b",
-    TraceActor("user1", Human),
-    TraceActor("b", System),
+    Actor("user1", Human),
+    Actor("b", System),
     "init 1 req",
     "init 2 resp",
     listOf(fireAndForget_user1, b_to_c)
 )
 
 val fireAndForget_d = FireAndForget(
-    "d",
-    "events",
-    TraceActor("d", System),
-    TraceActor("events", System),
+    Actor("d", System),
+    Actor("events", System),
     "event d",
     listOf()
 )
 
 val entire_trace_2 = RequestResponse(
-    "user2",
-    "d",
-    TraceActor("user2", Human),
-    TraceActor("d", System),
+    Actor("user2", Human),
+    Actor("d", System),
     "init 2 req",
     "init 2 resp",
     listOf(fireAndForget_d)

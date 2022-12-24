@@ -1,5 +1,6 @@
 package org.http4k.tracing.renderer
 
+import org.http4k.tracing.Actor
 import org.http4k.tracing.ActorType.Database
 import org.http4k.tracing.BiDirectional
 import org.http4k.tracing.FireAndForget
@@ -8,7 +9,6 @@ import org.http4k.tracing.StartInteraction
 import org.http4k.tracing.StartRendering
 import org.http4k.tracing.StopRendering
 import org.http4k.tracing.Trace
-import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TraceRender
 import org.http4k.tracing.TraceRenderer
 import org.http4k.tracing.TraceStep
@@ -37,7 +37,7 @@ object PumlSequenceDiagram : TraceRenderer {
     @enduml""".trimMargin())
     }
 
-    private fun Iterable<TraceActor>.toPumlActor() =
+    private fun Iterable<Actor>.toPumlActor() =
         fold(emptyList<String>()) { acc, next ->
             val nextVal = when (next.type) {
                 Database -> "database"
@@ -53,19 +53,19 @@ object PumlSequenceDiagram : TraceRenderer {
     }
 
     private fun RequestResponse.asPumlSequenceDiagram(): String = """
-           |"$origin" -> "$target": $request
-           |activate "$target"
+           |"${origin.name}" -> "${target.name}": $request
+           |activate "${target.name}"
            |${children.joinToString("\n") { it.asPumlSequenceDiagram() }}
-           |"$target" --> "$origin": $response
-           |deactivate "$target"
+           |"${target.name}" --> "${origin.name}": $response
+           |deactivate "${target.name}"
             """.trimMargin()
 
     private fun BiDirectional.asPumlSequenceDiagram(): String = """
-           |"$origin" <-> "$target": $request
+           |"${origin.name}" <-> "${target.name}": $request
             """.trimMargin()
 
     private fun FireAndForget.asPumlSequenceDiagram(): String = """
-           |"$origin" -> "$target": $request
+           |"${origin.name}" -> "${target.name}": $request
             """.trimMargin()
 
     private fun StartInteraction.asPumlSequenceDiagram(): String = """

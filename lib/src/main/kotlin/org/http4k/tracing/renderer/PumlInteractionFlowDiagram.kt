@@ -1,9 +1,9 @@
 package org.http4k.tracing.renderer
 
+import org.http4k.tracing.Actor
 import org.http4k.tracing.ActorType.Database
 import org.http4k.tracing.ActorType.Human
 import org.http4k.tracing.Trace
-import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TraceRender
 import org.http4k.tracing.TraceRenderer
 import org.http4k.tracing.TraceStep
@@ -33,7 +33,7 @@ ${relations.joinToString("\n") { "Rel_D(${it.origin.identifier()}, ${it.target.i
         )
     }
 
-    private fun Iterable<TraceActor>.toPumlActor() =
+    private fun Iterable<Actor>.toPumlActor() =
         fold(emptyList<String>()) { acc, it ->
             val nextVal = when (it.type) {
                 Database -> "ContainerDb"
@@ -47,8 +47,8 @@ ${relations.joinToString("\n") { "Rel_D(${it.origin.identifier()}, ${it.target.i
     private fun Trace.relations(baseCounter: Int): List<Call> =
         listOf(
             Call(
-                origin,
-                target,
+                origin.name,
+                target.name,
                 "$baseCounter. $request"
             )
         ) + children.flatMapIndexed { i, it -> it.relations(baseCounter + i + 1) }
