@@ -1,14 +1,16 @@
 @startuml
 title foobar
-participant "a"
+participant "user1"
+participant "user2"
 participant "b"
 participant "c"
+participant "d"
 participant "events"
 database "db"
 participant "external"
-"a" -> "b": req
+"user1" -> "b": init 1 req
 activate "b"
-"a" -> "events": event a
+"user1" -> "events": event a
 "b" -> "c": b-to-c req
 activate "c"
 "b" <-> "db": bidi-b req-resp
@@ -19,6 +21,11 @@ activate "external"
 deactivate "external"
 "c" --> "b": b-to-c resp
 deactivate "c"
-"b" --> "a": resp
+"b" --> "user1": init 2 resp
 deactivate "b"
+"user2" -> "d": init 2 req
+activate "d"
+"d" -> "events": event d
+"d" --> "user2": init 2 resp
+deactivate "d"
     @enduml

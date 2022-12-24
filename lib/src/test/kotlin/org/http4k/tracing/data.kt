@@ -31,21 +31,40 @@ val b_to_c = RequestResponse(
     listOf(bidi_b, c_to_external)
 )
 
-val fireAndForget_a = FireAndForget(
-    "a",
+val fireAndForget_user1 = FireAndForget(
+    "user1",
     "events",
-    Internal("a"),
+    Internal("user1"),
     TraceActor.Events("events"),
     "event a",
     listOf()
 )
 
-val entire_trace = RequestResponse(
-    "a",
+val entire_trace_1 = RequestResponse(
+    "user1",
     "b",
-    Internal("a"),
+    Internal("user1"),
     Internal("b"),
-    "req",
-    "resp",
-    listOf(fireAndForget_a, b_to_c)
+    "init 1 req",
+    "init 2 resp",
+    listOf(fireAndForget_user1, b_to_c)
+)
+
+val fireAndForget_d = FireAndForget(
+    "d",
+    "events",
+    Internal("d"),
+    TraceActor.Events("events"),
+    "event d",
+    listOf()
+)
+
+val entire_trace_2 = RequestResponse(
+    "user2",
+    "d",
+    Internal("user2"),
+    Internal("d"),
+    "init 2 req",
+    "init 2 resp",
+    listOf(fireAndForget_d)
 )

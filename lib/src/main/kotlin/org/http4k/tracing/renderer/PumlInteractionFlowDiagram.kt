@@ -5,6 +5,7 @@ import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TraceRender
 import org.http4k.tracing.TraceRenderer
 import org.http4k.tracing.TraceStep
+import org.http4k.tracing.chronologicalActors
 
 object PumlInteractionFlowDiagram : TraceRenderer {
     override fun render(scenarioName: String, steps: List<TraceStep>): TraceRender {
@@ -24,7 +25,7 @@ title $scenarioName
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
-${traces.flatMap { it.actors() }.toPumlActor().joinToString("\n")}    
+${traces.chronologicalActors().toPumlActor().joinToString("\n")}    
 ${relations.joinToString("\n") { "Rel_D(${it.origin.identifier()}, ${it.target.identifier()}, \"${it.interaction}\")" }}    
 @enduml""".trimMargin()
 

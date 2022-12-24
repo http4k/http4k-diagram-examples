@@ -4,15 +4,19 @@ title foobar
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
-System(a, "a")
+System(user1, "user1")
+System(user2, "user2")
 System(b, "b")
 System(c, "c")
+System(d, "d")
 System(events, "events")
 ContainerDb(db, "db")
 System(external, "external")    
-Rel_D(a, b, " ") 
-Rel_D(a, events, " ") 
+Rel_D(user1, b, " ") 
+Rel_D(user1, events, " ") 
 Rel_D(b, c, " ") 
 Rel_D(b, db, " ") 
-Rel_D(c, external, " ")     
+Rel_D(c, external, " ") 
+Rel_D(user2, d, " ") 
+Rel_D(d, events, " ")     
 @enduml

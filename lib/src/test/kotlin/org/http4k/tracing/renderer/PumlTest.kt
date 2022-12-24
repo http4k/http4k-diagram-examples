@@ -5,16 +5,19 @@ import com.natpryce.hamkrest.equalTo
 import org.http4k.testing.ApprovalTest
 import org.http4k.testing.Approver
 import org.http4k.testing.assertApproved
-import org.http4k.tracing.entire_trace
+import org.http4k.tracing.entire_trace_1
+import org.http4k.tracing.entire_trace_2
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(ApprovalTest::class)
 class PumlTest {
 
+    private val traces = listOf(entire_trace_1, entire_trace_2)
+
     @Test
     fun `sequence renders as expected`(approver: Approver) {
-        val render = PumlSequenceDiagram.render("foobar", listOf(entire_trace))
+        val render = PumlSequenceDiagram.render("foobar", traces)
         assertThat(render.title, equalTo("foobar - Sequence"))
         assertThat(render.format, equalTo("PUML"))
         approver.assertApproved(render.content)
@@ -22,7 +25,7 @@ class PumlTest {
 
     @Test
     fun `interaction renders as expected`(approver: Approver) {
-        val render = PumlInteractionDiagram.render("foobar", listOf(entire_trace))
+        val render = PumlInteractionDiagram.render("foobar", traces)
         assertThat(render.title, equalTo("foobar - Interactions"))
         assertThat(render.format, equalTo("PUML"))
         approver.assertApproved(render.content)
@@ -30,7 +33,7 @@ class PumlTest {
 
     @Test
     fun `interaction flow renders as expected`(approver: Approver) {
-        val render = PumlInteractionFlowDiagram.render("foobar", listOf(entire_trace))
+        val render = PumlInteractionFlowDiagram.render("foobar", traces)
         assertThat(render.title, equalTo("foobar - Flow"))
         assertThat(render.format, equalTo("PUML"))
         approver.assertApproved(render.content)

@@ -12,11 +12,6 @@ sealed interface Trace : TraceStep {
     val request: String
     val children: List<Trace>
 
-    fun actors() = (origins() + targets()).distinct()
-
-    private fun origins(): List<TraceActor> = listOf(originActor) + children.flatMap { it.origins() }
-    private fun targets(): List<TraceActor> = listOf(targetActor) + children.flatMap { it.targets() }
-
     companion object
 }
 
