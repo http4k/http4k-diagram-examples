@@ -4,7 +4,7 @@ import org.http4k.core.then
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
 import org.http4k.tracing.StopRendering
-import org.http4k.tracing.junit.RecordingMode.AUTO
+import org.http4k.tracing.junit.RecordingMode.Auto
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
@@ -12,7 +12,7 @@ class PingTest {
 
     // generates PlantUML diagrams in .generated/diagrams
     @RegisterExtension
-    val events = CustomTracingEvents("PUML example", recordingMode = AUTO)
+    val events = CustomTracingEvents("PUML example", recordingMode = Auto)
 
     private val pingServer = pingApp()
     private val pingClient = AppOutgoingHttp(AppEvents("another-server").then(events)).then(pingServer)

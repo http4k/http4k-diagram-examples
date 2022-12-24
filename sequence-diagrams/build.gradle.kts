@@ -6,7 +6,6 @@ dependencies {
     implementation("dev.forkhandles:result4k:_")
     implementation(Http4k.aws)
     implementation(Http4k.cloudnative)
-    implementation(Http4k.incubator)
     implementation(Http4k.client.okhttp)
     implementation(Http4k.server.undertow)
 
@@ -14,5 +13,5 @@ dependencies {
     testApi(Testing.junit.jupiter.engine)
 
     testFixturesApi(Http4k.testing.hamkrest)
-    testFixturesApi(project(":lib"))
+    testFixturesApi(Http4k.incubator)
 }

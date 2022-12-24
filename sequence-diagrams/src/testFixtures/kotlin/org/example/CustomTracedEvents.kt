@@ -13,10 +13,10 @@ import java.io.File
 
 fun CustomTracingEvents(app: String, recordingMode: RecordingMode) = TracerBulletEvents(
     app,
-    recordingMode.name.lowercase(),
     listOf(HttpTracer(AppName), DatabaseTracer(AppName), DomainEventTracer(AppName)),
     listOf(PumlSequenceDiagram, PumlInteractionDiagram, PumlInteractionFlowDiagram),
     FILE_TRACE_RENDER_PERSISTENCE,
+    recordingMode.name.lowercase(),
     FILE_TRACE_PERSISTENCE,
     recordingMode
 )
