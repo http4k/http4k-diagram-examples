@@ -43,9 +43,10 @@ class TracingEvents(
 
             val traces = tracerBullet(events.toList())
 
-            tracePersistence.store(ScenarioTraces(scenarioName, traces))
-
-            renderers.forEach { persistence(it.render(scenarioName, traces)) }
+            if(traces.isNotEmpty()) {
+                tracePersistence.store(ScenarioTraces(scenarioName, traces))
+                renderers.forEach { persistence(it.render(scenarioName, traces)) }
+            }
         }
     }
 
