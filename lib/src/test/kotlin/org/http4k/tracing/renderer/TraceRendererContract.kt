@@ -13,15 +13,15 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(ApprovalTest::class)
 abstract class TraceRendererContract(
-    val title: String,
-    val format: String,
-    val renderer: TraceRenderer
+    private val title: String,
+    private val format: String,
+    private val renderer: TraceRenderer
 ) {
     @Test
     fun `renders as expected`(approver: Approver) {
         val render = renderer.render("foobar", listOf(entire_trace_1, entire_trace_2))
         approver.assertApproved(render.content)
         assertThat(render.title, equalTo(title))
-        assertThat(render.format, equalTo("PUML"))
+        assertThat(render.format, equalTo(format))
     }
 }
