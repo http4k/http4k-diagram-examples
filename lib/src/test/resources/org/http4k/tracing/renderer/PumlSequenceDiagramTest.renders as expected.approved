@@ -17,15 +17,15 @@ activate "c"
 "c" -> "external": c-to-external req
 activate "external"
 
-"external" --> "c": c-to-external resp
+"external" -> "c": c-to-external resp
 deactivate "external"
-"c" --> "b": b-to-c resp
+"c" -> "b": b-to-c resp
 deactivate "c"
-"b" --> "user1": init 2 resp
+"b" -> "user1": init 2 resp
 deactivate "b"
 "user2" -> "d": init 2 req
 activate "d"
 "d" -> "events": event d
-"d" --> "user2": init 2 resp
+"d" -> "user2": init 2 resp
 deactivate "d"
     @enduml

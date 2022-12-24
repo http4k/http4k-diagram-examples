@@ -5,6 +5,6 @@ participant "a-server"
 "John Doe" -> "a-server": GET ping 
 activate "a-server"
 
-"a-server" --> "John Doe": 200 OK
+"a-server" -> "John Doe": 200 OK
 deactivate "a-server"
     @enduml

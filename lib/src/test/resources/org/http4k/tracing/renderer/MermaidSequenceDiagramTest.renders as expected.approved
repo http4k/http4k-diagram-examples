@@ -1,0 +1,40 @@
+sequenceDiagram
+    title foobar
+    actor user1
+	actor user2
+	participant b
+	participant c
+	participant d
+	participant events
+	participant db
+	participant external
+
+    user1->>b: init 1 req
+    
+    user1-)events: event a
+    
+    
+	
+    b->>c: b-to-c req
+    
+    b->>db: bidi-b req-resp
+    
+    db->>b: 
+    
+	
+    c->>external: c-to-external req
+    
+    external->>c: c-to-external resp
+    
+    c->>b: b-to-c resp
+    
+    b->>user1: init 2 resp
+    
+	
+    user2->>d: init 2 req
+    
+    d-)events: event d
+    
+    
+    d->>user2: init 2 resp
+    

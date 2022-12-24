@@ -22,7 +22,7 @@ object PumlSequenceDiagram : TraceRenderer {
             "PUML",
             """@startuml
             |title $scenarioName
-            |${actors.toPumlActor().joinToString("\n")}
+            |${actors.toActor().joinToString("\n")}
             |${
                 steps.joinToString("\n") {
                     when (it) {
@@ -37,7 +37,7 @@ object PumlSequenceDiagram : TraceRenderer {
     @enduml""".trimMargin())
     }
 
-    private fun Iterable<Actor>.toPumlActor() =
+    private fun Iterable<Actor>.toActor() =
         fold(emptyList<String>()) { acc, next ->
             val nextVal = when (next.type) {
                 Database -> "database"
@@ -56,7 +56,7 @@ object PumlSequenceDiagram : TraceRenderer {
            |"${origin.name}" -> "${target.name}": $request
            |activate "${target.name}"
            |${children.joinToString("\n") { it.asPumlSequenceDiagram() }}
-           |"${target.name}" --> "${origin.name}": $response
+           |"${target.name}" -> "${origin.name}": $response
            |deactivate "${target.name}"
             """.trimMargin()
 

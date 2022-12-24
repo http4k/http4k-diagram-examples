@@ -8,13 +8,13 @@ activate "another-server"
 "another-server" -> "a-server": GET ping 
 activate "a-server"
 
-"a-server" --> "another-server": 200 OK
+"a-server" -> "another-server": 200 OK
 deactivate "a-server"
-"another-server" --> "John Doe": 200 OK
+"another-server" -> "John Doe": 200 OK
 deactivate "another-server"
 "John Doe" -> "a-server": GET ping 
 activate "a-server"
 
-"a-server" --> "John Doe": 200 OK
+"a-server" -> "John Doe": 200 OK
 deactivate "a-server"
     @enduml
