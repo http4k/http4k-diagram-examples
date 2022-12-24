@@ -1,7 +1,7 @@
 package org.http4k.tracing.renderer
 
 import org.http4k.tracing.ActorType.Database
-import org.http4k.tracing.ActorType.Person
+import org.http4k.tracing.ActorType.Human
 import org.http4k.tracing.Trace
 import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TraceRender
@@ -33,7 +33,7 @@ ${relations.joinToString("\n") { "Rel_D(${it.origin.identifier()}, ${it.target.i
         fold(emptyList<String>()) { acc, it ->
             val nextVal = when (it.type) {
                 Database -> "ContainerDb"
-                Person -> "Person"
+                Human -> "Person"
                 else -> "System"
             } + "(${it.name.identifier()}, \"${it.name}\")"
 

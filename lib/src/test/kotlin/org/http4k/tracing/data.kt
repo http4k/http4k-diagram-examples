@@ -1,7 +1,7 @@
 package org.http4k.tracing
 
 import org.http4k.tracing.ActorType.Database
-import org.http4k.tracing.ActorType.Person
+import org.http4k.tracing.ActorType.Human
 import org.http4k.tracing.ActorType.System
 
 val c_to_external = RequestResponse(
@@ -36,7 +36,7 @@ val b_to_c = RequestResponse(
 val fireAndForget_user1 = FireAndForget(
     "user1",
     "events",
-    TraceActor("user1", Person),
+    TraceActor("user1", Human),
     TraceActor("events", System),
     "event a",
     listOf()
@@ -45,7 +45,7 @@ val fireAndForget_user1 = FireAndForget(
 val entire_trace_1 = RequestResponse(
     "user1",
     "b",
-    TraceActor("user1", Person),
+    TraceActor("user1", Human),
     TraceActor("b", System),
     "init 1 req",
     "init 2 resp",
@@ -64,7 +64,7 @@ val fireAndForget_d = FireAndForget(
 val entire_trace_2 = RequestResponse(
     "user2",
     "d",
-    TraceActor("user2", Person),
+    TraceActor("user2", Human),
     TraceActor("d", System),
     "init 2 req",
     "init 2 resp",
