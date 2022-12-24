@@ -1,5 +1,5 @@
 @startuml
-title Sequence diagram example: Multiple interactions test
+title Sequence diagram example (auto): Multiple interactions test
 participant "John Doe"
 participant "another-server"
 participant "a-server"

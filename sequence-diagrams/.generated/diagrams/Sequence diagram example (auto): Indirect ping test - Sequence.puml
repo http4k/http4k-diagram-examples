@@ -1,5 +1,5 @@
 @startuml
-title Sequence diagram example: Indirect ping test
+title Sequence diagram example (auto): Indirect ping test
 participant "John Doe"
 participant "another-server"
 participant "a-server"

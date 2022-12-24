@@ -41,11 +41,13 @@ class TracingEvents(
 
     override fun afterTestExecution(context: ExtensionContext) {
         if (context.executionException.isEmpty) {
+            val scenarioName = "$fullTitle: ${context.testMethod.get().name}"
+
             val traces = tracerBullet(events.toList())
 
-            tracePersistence.store(NamedTrace(context.testMethod.get().name, traces))
+            tracePersistence.store(NamedTrace(scenarioName, traces))
             renderers.forEach {
-                persistence(it.render("$fullTitle: ${context.testMethod.get().name}", traces))
+                persistence(it.render(scenarioName, traces))
             }
         }
     }

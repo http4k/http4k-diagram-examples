@@ -5,9 +5,9 @@ title Combined
 
 
 Person(JohnDoe, "John Doe")
-System(anotherserver, "another-server")
-System(aserver, "a-server")    
+System(aserver, "a-server")
+System(anotherserver, "another-server")    
+Rel_D(JohnDoe, aserver, " ") 
 Rel_D(JohnDoe, anotherserver, " ") 
-Rel_D(anotherserver, aserver, " ") 
-Rel_D(JohnDoe, aserver, " ")     
+Rel_D(anotherserver, aserver, " ")     
 @enduml

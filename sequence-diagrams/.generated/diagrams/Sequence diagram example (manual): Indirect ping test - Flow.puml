@@ -1,5 +1,5 @@
 @startuml
-title Sequence diagram example: Multiple interactions test
+title Sequence diagram example (manual): Indirect ping test
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
@@ -8,6 +8,5 @@ Person(JohnDoe, "John Doe")
 Container(anotherserver, "another-server")
 Container(aserver, "a-server")    
 Rel_D(JohnDoe, anotherserver, "1. GET indirect-ping ")
-Rel_D(anotherserver, aserver, "2. GET ping ")
-Rel_D(JohnDoe, aserver, "2. GET ping ")    
+Rel_D(anotherserver, aserver, "2. GET ping ")    
 @enduml

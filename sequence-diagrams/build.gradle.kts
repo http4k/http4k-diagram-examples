@@ -12,7 +12,7 @@ dependencies {
 
     testApi(Testing.junit.jupiter.api)
     testApi(Testing.junit.jupiter.engine)
-    testApi(Http4k.testing.hamkrest)
 
+    testFixturesApi(Http4k.testing.hamkrest)
     testFixturesApi(project(":lib"))
 }

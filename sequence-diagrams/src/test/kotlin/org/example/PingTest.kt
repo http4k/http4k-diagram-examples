@@ -1,15 +1,10 @@
 package org.example
 
-import com.natpryce.hamkrest.assertion.assertThat
-import org.http4k.core.HttpHandler
-import org.http4k.core.Method.GET
-import org.http4k.core.Request
 import org.http4k.core.then
-import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
-import org.http4k.hamkrest.hasBody
 import org.http4k.tracing.StopRendering
+import org.http4k.tracing.junit.RecordingMode.AUTO
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.RegisterExtension
 
@@ -17,7 +12,7 @@ class PingTest {
 
     // generates PlantUML diagrams in .generated/diagrams
     @RegisterExtension
-    val events = CustomTracingEvents("sequence-diagram-example")
+    val events = CustomTracingEvents("sequence-diagram-example", recordingMode = AUTO)
 
     private val pingServer = pingApp()
     private val pingClient = AppOutgoingHttp(AppEvents("another-server").then(events)).then(pingServer)
@@ -47,21 +42,3 @@ class PingTest {
     }
 }
 
-class UserAsActor(evens: Events, ping: HttpHandler, indirectPing: HttpHandler) {
-    private val name = "John Doe"
-    private val pingHttp = TracedActorHttp(name, ping, evens)
-    private val indirectPingHttp = TracedActorHttp(name, indirectPing, evens)
-
-    fun ping() {
-        assertThat(pingHttp(Request(GET, "http://a-server/ping")), hasBody("pong"))
-    }
-
-    fun indirectPing() {
-        assertThat(indirectPingHttp(Request(GET, "http://another-server/indirect-ping")), hasBody("pong"))
-    }
-
-    fun multipleInteractions() {
-        indirectPing()
-        ping()
-    }
-}
