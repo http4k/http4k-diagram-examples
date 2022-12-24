@@ -14,10 +14,7 @@ import org.http4k.tracing.TraceStep
 
 object PumlSequenceDiagram : TraceRenderer {
     override fun render(scenarioName: String, steps: List<TraceStep>): TraceRender {
-        val actors = steps.filterIsInstance<Trace>()
-            .flatMap { it.actors() }
-            .toSet()
-            .sorted()
+        val actors = steps.filterIsInstance<Trace>().flatMap { it.actors() }
 
         return TraceRender(
             "$scenarioName - Sequence",
@@ -38,9 +35,6 @@ object PumlSequenceDiagram : TraceRenderer {
             }
     @enduml""".trimMargin())
     }
-
-    private fun Trace.actors(): Set<TraceActor> =
-        (listOf(originActor, targetActor) + children.flatMap { it.actors() }).toSet()
 
     private fun Iterable<TraceActor>.toPumlActor() =
         fold(emptyList<String>()) { acc, next ->

@@ -3,8 +3,8 @@ title foobar
 participant "a"
 participant "b"
 participant "c"
-database "db"
 participant "events"
+database "db"
 participant "external"
 "a" -> "b": req
 activate "b"
