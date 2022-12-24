@@ -10,12 +10,14 @@ sequenceDiagram
 	participant external
 
     user1->>b: init 1 req
+    activate b
     
     user1-)events: event a
     
     
 	
     b->>c: b-to-c req
+    activate c
     
     b->>db: bidi-b req-resp
     
@@ -23,18 +25,24 @@ sequenceDiagram
     
 	
     c->>external: c-to-external req
+    activate external
     
     external->>c: c-to-external resp
+    deactivate external
     
     c->>b: b-to-c resp
+    deactivate c
     
     b->>user1: init 2 resp
+    deactivate b
     
 	
     user2->>d: init 2 req
+    activate d
     
     d-)events: event d
     
     
     d->>user2: init 2 resp
+    deactivate d
     

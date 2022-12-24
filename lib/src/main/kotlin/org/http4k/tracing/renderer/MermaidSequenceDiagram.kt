@@ -53,8 +53,10 @@ ${
 
     private fun RequestResponse.asMermaidSequenceDiagram(): String = """
     ${origin.name}->>${target.name}: $request
+    activate ${target.name}
     ${children.joinToString("\n\t") { it.asMermaidSequenceDiagram() }}
     ${target.name}->>${origin.name}: $response
+    deactivate ${target.name}
     """
 
     private fun BiDirectional.asMermaidSequenceDiagram(): String = """
