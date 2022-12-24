@@ -11,8 +11,6 @@ sealed interface Trace : TraceStep {
     val targetActor: TraceActor
     val request: String
     val children: List<Trace>
-
-    companion object
 }
 
 data class StartInteraction(val origin: String, val interactionName: String) : TraceStep,
