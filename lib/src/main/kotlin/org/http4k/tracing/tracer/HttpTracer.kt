@@ -12,30 +12,30 @@ import org.http4k.tracing.TraceActor
 import org.http4k.tracing.Tracer
 import org.http4k.tracing.traces
 
-fun HttpTracer(origin: OriginNamer) = object : Tracer {
-    override operator fun invoke(
-        parent: MetadataEvent,
-        rest: List<MetadataEvent>,
-        tracer: Tracer
-    ) = parent
+fun HttpTracer(origin: OriginNamer) = Tracer { parent, rest, tracer ->
+    parent
         .takeIf { it.event is HttpEvent.Outgoing }
-        ?.let { listOf(it.toTrace(rest - it, tracer)) } ?: emptyList()
+        ?.let { it.toTrace(origin, rest - it, tracer) }
+        ?.let { listOf(it) } ?: emptyList()
+}
 
-    private fun MetadataEvent.toTrace(rest: List<MetadataEvent>, tracer: Tracer): Trace {
-        val parentEvent = event as HttpEvent.Outgoing
-        return Trace.Http(
-            origin(this),
-            traces()?.parentSpanId == null,
-            parentEvent.uri.path(parentEvent.xUriTemplate),
-            parentEvent.method,
-            parentEvent.status,
-            rest
-                .filter { it.traces() != null && traces()?.spanId == it.traces()?.parentSpanId }
-                .filter { (event as HttpEvent).uri.host == origin(it) }
-                .flatMap { tracer(it, rest - it, tracer) },
-            emptyList()
-        )
-    }
+private fun MetadataEvent.toTrace(
+    origin: OriginNamer,
+    rest: List<MetadataEvent>,
+    tracer: Tracer): Trace {
+    val parentEvent = event as HttpEvent.Outgoing
+    return Trace.Http(
+        origin(this),
+        traces()?.parentSpanId == null,
+        parentEvent.uri.path(parentEvent.xUriTemplate),
+        parentEvent.method,
+        parentEvent.status,
+        rest
+            .filter { it.traces() != null && traces()?.spanId == it.traces()?.parentSpanId }
+            .filter { (event as HttpEvent).uri.host == origin(it) }
+            .flatMap { tracer(it, rest - it, tracer) },
+        emptyList()
+    )
 }
 
 private fun Trace.Companion.Http(

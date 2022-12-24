@@ -20,10 +20,10 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import java.util.Locale
 
 /**
- * An Events implementation which also generates Trace renderings and stores them
+ * JUnit plugin which is also an Events implementation that generates Trace renderings and stores them.
  */
 class TracerBulletEvents(
-    private val title: String,
+    private val traceTitle: String,
     private val testVariant: String?,
     tracers: List<Tracer>,
     private val renderers: List<TraceRenderer>,
@@ -41,7 +41,7 @@ class TracerBulletEvents(
     override fun afterTestExecution(context: ExtensionContext) {
         if (context.executionException.isEmpty) {
             val scenarioName = "${
-                title.capitalize().replace('-', ' ') + (testVariant?.let { " ($testVariant)" } ?: "")
+                traceTitle.capitalize().replace('-', ' ') + (testVariant?.let { " ($testVariant)" } ?: "")
             }: ${context.testMethod.get().name}"
 
             val traces = tracerBullet(events.toList())
