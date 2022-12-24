@@ -15,6 +15,7 @@ import org.http4k.tracing.TraceRenderer
 import org.http4k.tracing.TraceStep
 import org.http4k.tracing.Tracer
 import org.http4k.tracing.junit.RecordingMode.AUTO
+import org.http4k.tracing.junit.RecordingMode.MANUAL
 import org.http4k.tracing.persistence.InMemory
 import org.http4k.tracing.persistence.InMemoryTraceRenderPersistence
 import org.junit.jupiter.api.Test
@@ -25,19 +26,18 @@ import java.util.Optional
 class TracingEventsTest {
     private val traceRenderPersistence = InMemoryTraceRenderPersistence()
     private val tracePersistence = TracePersistence.InMemory()
+    private val title = "Title (variant): toString"
 
     @Test
     fun `write traces`() {
         val events = tracingEvents(AUTO)
 
-        val tracedEvents = AddZipkinTraces().then(events)
+        val eventsToSend = listOf(MyEvent, MyOtherEvent, YetAnotherEvent)
+        eventsToSend.forEach(AddZipkinTraces().then(events))
 
-        val toSend = listOf(MyEvent, MyOtherEvent)
-        toSend.forEach(tracedEvents)
         events.afterTestExecution(FakeEC())
 
-        val title = "Title (variant): toString"
-        val traces = toSend.map { toTrace(MetadataEvent(it)) }
+        val traces = eventsToSend.map(::toTrace)
         assertThat(
             traceRenderPersistence.toList(),
             equalTo(listOf(TraceRender(title, title, traces.toString())))
@@ -53,8 +53,48 @@ class TracingEventsTest {
         val events = tracingEvents(AUTO)
         events.afterTestExecution(FakeEC())
 
-        assertThat(tracePersistence.load().toList().isEmpty(), equalTo(true))
-        assertThat(traceRenderPersistence.toList().isEmpty(), equalTo(true))
+        assertThat(tracePersistence.load().toList(), equalTo(listOf()))
+        assertThat(traceRenderPersistence.toList(), equalTo(listOf()))
+    }
+
+    @Test
+    fun `does not write empty traces when rendering off`() {
+        val events = tracingEvents(MANUAL)
+
+        val eventsToSend = listOf(MyEvent, MyOtherEvent, YetAnotherEvent)
+
+        eventsToSend.forEach(AddZipkinTraces().then(events))
+
+        events.afterTestExecution(FakeEC())
+
+        assertThat(tracePersistence.load().toList(), equalTo(listOf()))
+        assertThat(traceRenderPersistence.toList(), equalTo(listOf()))
+    }
+
+    @Test
+    fun `can enable and disable rendering`() {
+        val events = tracingEvents(MANUAL)
+
+        val decoratedEvents = AddZipkinTraces().then(events)
+        decoratedEvents(MyEvent)
+
+        events.record { decoratedEvents(MyOtherEvent) }
+
+        decoratedEvents(MyEvent)
+
+        events.record { decoratedEvents(YetAnotherEvent) }
+
+        events.afterTestExecution(FakeEC())
+
+        val traces = listOf(toTrace(MyOtherEvent), toTrace(YetAnotherEvent))
+
+        assertThat(
+            traceRenderPersistence.toList(),
+            equalTo(listOf(TraceRender(title, title, traces.toString())))
+        )
+        assertThat(tracePersistence.load().toList(), equalTo(
+            listOf(ScenarioTraces(title, traces))
+        ))
     }
 
     private fun tracingEvents(recordingMode: RecordingMode) = TracingEvents(
@@ -73,11 +113,12 @@ private class MyTraceRenderer : TraceRenderer {
 }
 
 private class MyTracer : Tracer {
-    override fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer) = listOf(toTrace(parent))
+    override fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer) = listOf(toTrace(parent.event))
 }
 
 object MyEvent : Event
 object MyOtherEvent : Event
+object YetAnotherEvent : Event
 
 inline fun <reified T> proxy(): T = Proxy.newProxyInstance(
     T::class.java.classLoader,
@@ -89,8 +130,8 @@ private class FakeEC : ExtensionContext by proxy() {
     override fun getTestMethod() = Optional.of(String::class.java.getMethod("toString"))
 }
 
-private fun toTrace(parent: MetadataEvent): FireAndForget {
-    val name = parent.event.javaClass.simpleName
+private fun toTrace(event: Event): FireAndForget {
+    val name = event.javaClass.simpleName
     return FireAndForget(
         name, "target",
         TraceActor.Internal(name),

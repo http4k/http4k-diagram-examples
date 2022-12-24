@@ -19,7 +19,7 @@ class Ping_ManualRecordingTest {
 
     @Test
     fun `Indirect ping test`() {
-        events.use {
+        events.record {
             pingActor.indirectPing()
         }
     }

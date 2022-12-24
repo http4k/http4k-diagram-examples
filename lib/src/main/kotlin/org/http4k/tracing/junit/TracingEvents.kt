@@ -51,7 +51,7 @@ class TracingEvents(
         }
     }
 
-    fun use(block: () -> Unit) {
+    fun record(block: () -> Unit) {
         events(MetadataEvent(StartRendering))
         block()
         events(MetadataEvent(StopRendering))
