@@ -1,5 +1,6 @@
 package org.http4k.tracing.renderer
 
+import org.http4k.tracing.ActorType.Database
 import org.http4k.tracing.BiDirectional
 import org.http4k.tracing.FireAndForget
 import org.http4k.tracing.RequestResponse
@@ -38,8 +39,8 @@ object PumlSequenceDiagram : TraceRenderer {
 
     private fun Iterable<TraceActor>.toPumlActor() =
         fold(emptyList<String>()) { acc, next ->
-            val nextVal = when (next) {
-                is TraceActor.Database -> "database"
+            val nextVal = when (next.type) {
+                Database -> "database"
                 else -> "participant"
             } + " \"${next.name}\""
             if (acc.contains(nextVal)) acc else acc + nextVal

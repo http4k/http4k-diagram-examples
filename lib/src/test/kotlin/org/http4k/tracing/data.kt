@@ -1,12 +1,14 @@
 package org.http4k.tracing
 
-import org.http4k.tracing.TraceActor.Internal
+import org.http4k.tracing.ActorType.Database
+import org.http4k.tracing.ActorType.Person
+import org.http4k.tracing.ActorType.System
 
 val c_to_external = RequestResponse(
     "c",
     "external",
-    Internal("c"),
-    TraceActor.External("external"),
+    TraceActor("c", System),
+    TraceActor("external", System),
     "c-to-external req",
     "c-to-external resp",
     listOf()
@@ -15,8 +17,8 @@ val c_to_external = RequestResponse(
 val bidi_b = BiDirectional(
     "b",
     "db",
-    Internal("b"),
-    TraceActor.Database("db"),
+    TraceActor("b", System),
+    TraceActor("db", Database),
     "bidi-b req-resp",
     listOf()
 )
@@ -24,8 +26,8 @@ val bidi_b = BiDirectional(
 val b_to_c = RequestResponse(
     "b",
     "c",
-    Internal("b"),
-    Internal("c"),
+    TraceActor("b", System),
+    TraceActor("c", System),
     "b-to-c req",
     "b-to-c resp",
     listOf(bidi_b, c_to_external)
@@ -34,8 +36,8 @@ val b_to_c = RequestResponse(
 val fireAndForget_user1 = FireAndForget(
     "user1",
     "events",
-    Internal("user1"),
-    TraceActor.Events("events"),
+    TraceActor("user1", Person),
+    TraceActor("events", System),
     "event a",
     listOf()
 )
@@ -43,8 +45,8 @@ val fireAndForget_user1 = FireAndForget(
 val entire_trace_1 = RequestResponse(
     "user1",
     "b",
-    Internal("user1"),
-    Internal("b"),
+    TraceActor("user1", Person),
+    TraceActor("b", System),
     "init 1 req",
     "init 2 resp",
     listOf(fireAndForget_user1, b_to_c)
@@ -53,8 +55,8 @@ val entire_trace_1 = RequestResponse(
 val fireAndForget_d = FireAndForget(
     "d",
     "events",
-    Internal("d"),
-    TraceActor.Events("events"),
+    TraceActor("d", System),
+    TraceActor("events", System),
     "event d",
     listOf()
 )
@@ -62,8 +64,8 @@ val fireAndForget_d = FireAndForget(
 val entire_trace_2 = RequestResponse(
     "user2",
     "d",
-    Internal("user2"),
-    Internal("d"),
+    TraceActor("user2", Person),
+    TraceActor("d", System),
     "init 2 req",
     "init 2 resp",
     listOf(fireAndForget_d)

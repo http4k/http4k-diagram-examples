@@ -1,11 +1,7 @@
 package org.http4k.tracing
 
-sealed interface TraceActor {
-    val name: String
+data class TraceActor(val name: String, val type: ActorType)
 
-    data class Person(override val name: String) : TraceActor
-    data class Internal(override val name: String) : TraceActor
-    data class Database(override val name: String) : TraceActor
-    data class Events(override val name: String) : TraceActor
-    data class External(override val name: String) : TraceActor
+enum class ActorType {
+    Person, System, Database, Queue
 }

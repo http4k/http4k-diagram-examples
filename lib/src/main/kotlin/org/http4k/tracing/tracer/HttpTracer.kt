@@ -5,6 +5,8 @@ import org.http4k.core.Status
 import org.http4k.core.Uri
 import org.http4k.events.HttpEvent
 import org.http4k.events.MetadataEvent
+import org.http4k.tracing.ActorType.Person
+import org.http4k.tracing.ActorType.System
 import org.http4k.tracing.OriginNamer
 import org.http4k.tracing.RequestResponse
 import org.http4k.tracing.Trace
@@ -51,8 +53,8 @@ private fun Trace.Companion.Http(
     return RequestResponse(
         origin,
         uri.host,
-        if (originating) TraceActor.Person(origin) else TraceActor.Internal(origin),
-        TraceActor.Internal(uri.host),
+        if (originating) TraceActor(origin, Person) else TraceActor(origin, System),
+        TraceActor(uri.host, System),
         method.name + " " + uri.path + " " + describeHeaders,
         status.toString(),
         children

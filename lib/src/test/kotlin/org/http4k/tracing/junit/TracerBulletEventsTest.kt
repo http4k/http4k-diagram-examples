@@ -6,6 +6,7 @@ import org.http4k.events.Event
 import org.http4k.events.EventFilters.AddZipkinTraces
 import org.http4k.events.MetadataEvent
 import org.http4k.events.then
+import org.http4k.tracing.ActorType.System
 import org.http4k.tracing.FireAndForget
 import org.http4k.tracing.ScenarioTraces
 import org.http4k.tracing.TraceActor
@@ -23,14 +24,14 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import java.lang.reflect.Proxy
 import java.util.Optional
 
-class TracingEventsTest {
+class TracerBulletEventsTest {
     private val traceRenderPersistence = InMemoryTraceRenderPersistence()
     private val tracePersistence = TracePersistence.InMemory()
     private val title = "Title (variant): toString"
 
     @Test
     fun `write traces`() {
-        val events = tracingEvents(AUTO)
+        val events = tracerBulletEvents(AUTO)
 
         val eventsToSend = listOf(MyEvent, MyOtherEvent, YetAnotherEvent)
         eventsToSend.forEach(AddZipkinTraces().then(events))
@@ -50,7 +51,7 @@ class TracingEventsTest {
 
     @Test
     fun `does not write empty traces`() {
-        val events = tracingEvents(AUTO)
+        val events = tracerBulletEvents(AUTO)
         events.afterTestExecution(FakeEC())
 
         assertThat(tracePersistence.load().toList(), equalTo(listOf()))
@@ -59,7 +60,7 @@ class TracingEventsTest {
 
     @Test
     fun `does not write empty traces when rendering off`() {
-        val events = tracingEvents(MANUAL)
+        val events = tracerBulletEvents(MANUAL)
 
         val eventsToSend = listOf(MyEvent, MyOtherEvent, YetAnotherEvent)
 
@@ -73,7 +74,7 @@ class TracingEventsTest {
 
     @Test
     fun `can enable and disable rendering`() {
-        val events = tracingEvents(MANUAL)
+        val events = tracerBulletEvents(MANUAL)
 
         val decoratedEvents = AddZipkinTraces().then(events)
         decoratedEvents(MyEvent)
@@ -92,12 +93,14 @@ class TracingEventsTest {
             traceRenderPersistence.toList(),
             equalTo(listOf(TraceRender(title, title, traces.toString())))
         )
-        assertThat(tracePersistence.load().toList(), equalTo(
-            listOf(ScenarioTraces(title, traces))
-        ))
+        assertThat(
+            tracePersistence.load().toList(), equalTo(
+                listOf(ScenarioTraces(title, traces))
+            )
+        )
     }
 
-    private fun tracingEvents(recordingMode: RecordingMode) = TracerBulletEvents(
+    private fun tracerBulletEvents(recordingMode: RecordingMode) = TracerBulletEvents(
         "title", "variant",
         listOf(MyTracer()),
         listOf(MyTraceRenderer()),
@@ -113,7 +116,8 @@ private class MyTraceRenderer : TraceRenderer {
 }
 
 private class MyTracer : Tracer {
-    override fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer) = listOf(toTrace(parent.event))
+    override fun invoke(parent: MetadataEvent, rest: List<MetadataEvent>, tracer: Tracer) =
+        listOf(toTrace(parent.event))
 }
 
 object MyEvent : Event
@@ -134,8 +138,8 @@ private fun toTrace(event: Event): FireAndForget {
     val name = event.javaClass.simpleName
     return FireAndForget(
         name, "target",
-        TraceActor.Internal(name),
-        TraceActor.Internal("target"),
+        TraceActor(name, System),
+        TraceActor("target", System),
         "req",
         emptyList()
     )

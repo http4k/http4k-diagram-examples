@@ -1,6 +1,8 @@
 package org.example
 
 import org.http4k.events.MetadataEvent
+import org.http4k.tracing.ActorType.Queue
+import org.http4k.tracing.ActorType.System
 import org.http4k.tracing.BiDirectional
 import org.http4k.tracing.OriginNamer
 import org.http4k.tracing.Trace
@@ -21,8 +23,8 @@ private fun Trace.Companion.DomainEvent(
 ) = BiDirectional(
     origin,
     "events",
-    TraceActor.Internal(origin),
-    TraceActor.Events("events"),
+    TraceActor(origin, System),
+    TraceActor("events", Queue),
     request,
     emptyList()
 )

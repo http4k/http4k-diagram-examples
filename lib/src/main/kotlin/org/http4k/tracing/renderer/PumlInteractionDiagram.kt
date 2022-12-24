@@ -1,5 +1,7 @@
 package org.http4k.tracing.renderer
 
+import org.http4k.tracing.ActorType.Database
+import org.http4k.tracing.ActorType.Person
 import org.http4k.tracing.Trace
 import org.http4k.tracing.TraceActor
 import org.http4k.tracing.TraceRender
@@ -29,9 +31,9 @@ ${relations.joinToString("\n") { "Rel_D(${it.origin.identifier()}, ${it.target.i
 
     private fun Iterable<TraceActor>.toPumlActor() =
         fold(emptyList<String>()) { acc, it ->
-            val nextVal = when (it) {
-                is TraceActor.Database -> "ContainerDb"
-                is TraceActor.Person -> "Person"
+            val nextVal = when (it.type) {
+                Database -> "ContainerDb"
+                Person -> "Person"
                 else -> "System"
             } + "(${it.name.identifier()}, \"${it.name}\")"
 

@@ -1,6 +1,8 @@
 package org.example
 
 import org.http4k.events.MetadataEvent
+import org.http4k.tracing.ActorType.Database
+import org.http4k.tracing.ActorType.System
 import org.http4k.tracing.BiDirectional
 import org.http4k.tracing.OriginNamer
 import org.http4k.tracing.Trace
@@ -17,8 +19,8 @@ class DatabaseTracer(private val origin: OriginNamer) : Tracer {
 private fun Trace.Companion.Database(origin: String, request: String) = BiDirectional(
     origin,
     "db",
-    TraceActor.Internal(origin),
-    TraceActor.Database("db"),
+    TraceActor(origin, System),
+    TraceActor("db", Database),
     request,
     emptyList()
 )

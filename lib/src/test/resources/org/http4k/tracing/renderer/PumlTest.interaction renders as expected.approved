@@ -4,8 +4,8 @@ title foobar
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
-System(user1, "user1")
-System(user2, "user2")
+Person(user1, "user1")
+Person(user2, "user2")
 System(b, "b")
 System(c, "c")
 System(d, "d")

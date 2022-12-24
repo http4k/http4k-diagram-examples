@@ -10,12 +10,6 @@ import org.http4k.tracing.BiDirectional
 import org.http4k.tracing.FireAndForget
 import org.http4k.tracing.RequestResponse
 import org.http4k.tracing.Trace
-import org.http4k.tracing.TraceActor
-import org.http4k.tracing.TraceActor.Database
-import org.http4k.tracing.TraceActor.Events
-import org.http4k.tracing.TraceActor.External
-import org.http4k.tracing.TraceActor.Internal
-import org.http4k.tracing.TraceActor.Person
 
 object TraceMoshi : ConfigurableMoshi(
     Moshi.Builder()
@@ -26,15 +20,6 @@ object TraceMoshi : ConfigurableMoshi(
                 .withSubtype(RequestResponse::class.java, "RequestResponse")
                 .withSubtype(BiDirectional::class.java, "BiDirectional")
                 .withSubtype(FireAndForget::class.java, "FireAndForget")
-        )
-        .add(
-            PolymorphicJsonAdapterFactory
-                .of(TraceActor::class.java, "type")
-                .withSubtype(Internal::class.java, "Internal")
-                .withSubtype(External::class.java, "External")
-                .withSubtype(Database::class.java, "Database")
-                .withSubtype(Events::class.java, "Events")
-                .withSubtype(Person::class.java, "Person")
         )
         .asConfigurable()
         .withStandardMappings()
