@@ -1,10 +1,16 @@
-package org.http4k.tracing
+package org.http4k.tracing.tracer
 
 import org.http4k.core.Method
 import org.http4k.core.Status
 import org.http4k.core.Uri
 import org.http4k.events.HttpEvent
 import org.http4k.events.MetadataEvent
+import org.http4k.tracing.OriginNamer
+import org.http4k.tracing.RequestResponse
+import org.http4k.tracing.Trace
+import org.http4k.tracing.TraceActor
+import org.http4k.tracing.Tracer
+import org.http4k.tracing.traces
 
 fun HttpTracer(origin: OriginNamer) = object : Tracer {
     override operator fun invoke(

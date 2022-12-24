@@ -31,7 +31,7 @@ data class RequestResponse(
     override val children: List<Trace>
 ) : Trace, TraceStep
 
-data class Event(
+data class FireAndForget(
     override val origin: String,
     override val target: String,
     override val originActor: TraceActor,

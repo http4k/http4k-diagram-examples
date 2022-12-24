@@ -1,6 +1,5 @@
 package org.example
 
-import org.http4k.tracing.HttpTracer
 import org.http4k.tracing.TracePersistence
 import org.http4k.tracing.TraceRenderPersistence
 import org.http4k.tracing.junit.RecordingMode
@@ -9,6 +8,7 @@ import org.http4k.tracing.persistence.FileSystem
 import org.http4k.tracing.renderer.PumlInteractionDiagram
 import org.http4k.tracing.renderer.PumlInteractionFlowDiagram
 import org.http4k.tracing.renderer.PumlSequenceDiagram
+import org.http4k.tracing.tracer.HttpTracer
 import java.io.File
 
 fun CustomTracingEvents(app: String, recordingMode: RecordingMode) = TracingEvents(

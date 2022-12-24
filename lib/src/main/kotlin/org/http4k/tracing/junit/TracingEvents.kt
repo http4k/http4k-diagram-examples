@@ -24,7 +24,7 @@ class TracingEvents(
     private val testVariant: String?,
     tracers: List<Tracer>,
     private val renderers: List<TraceRenderer>,
-    private val persistence: TraceRenderPersistence,
+    private val traceRenderPersistence: TraceRenderPersistence,
     private val tracePersistence: TracePersistence = TracePersistence.InMemory(),
     private val mode: RecordingMode = AUTO
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
@@ -43,9 +43,10 @@ class TracingEvents(
 
             val traces = tracerBullet(events.toList())
 
+            println(traces)
             if(traces.isNotEmpty()) {
                 tracePersistence.store(ScenarioTraces(scenarioName, traces))
-                renderers.forEach { persistence(it.render(scenarioName, traces)) }
+                renderers.forEach { traceRenderPersistence(it.render(scenarioName, traces)) }
             }
         }
     }

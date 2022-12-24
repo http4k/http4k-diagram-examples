@@ -31,7 +31,7 @@ val b_to_c = RequestResponse(
     listOf(bidi_b, c_to_external)
 )
 
-val event_a = Event(
+val fireAndForget_a = FireAndForget(
     "a",
     "events",
     Internal("a"),
@@ -47,5 +47,5 @@ val entire_trace = RequestResponse(
     Internal("b"),
     "req",
     "resp",
-    listOf(event_a, b_to_c)
+    listOf(fireAndForget_a, b_to_c)
 )

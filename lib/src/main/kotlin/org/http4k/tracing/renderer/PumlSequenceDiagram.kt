@@ -1,7 +1,7 @@
 package org.http4k.tracing.renderer
 
 import org.http4k.tracing.BiDirectional
-import org.http4k.tracing.Event
+import org.http4k.tracing.FireAndForget
 import org.http4k.tracing.RequestResponse
 import org.http4k.tracing.StartInteraction
 import org.http4k.tracing.StartRendering
@@ -30,7 +30,7 @@ object PumlSequenceDiagram : TraceRenderer {
                     when (it) {
                         is RequestResponse -> it.asPumlSequenceDiagram()
                         is BiDirectional -> it.asPumlSequenceDiagram()
-                        is Event -> it.asPumlSequenceDiagram()
+                        is FireAndForget -> it.asPumlSequenceDiagram()
                         is StartInteraction -> it.asPumlSequenceDiagram()
                         is StartRendering, is StopRendering -> ""
                     }
@@ -54,7 +54,7 @@ object PumlSequenceDiagram : TraceRenderer {
     private fun Trace.asPumlSequenceDiagram() = when (this) {
         is RequestResponse -> asPumlSequenceDiagram()
         is BiDirectional -> asPumlSequenceDiagram()
-        is Event -> asPumlSequenceDiagram()
+        is FireAndForget -> asPumlSequenceDiagram()
     }
 
     private fun RequestResponse.asPumlSequenceDiagram(): String = """
@@ -69,7 +69,7 @@ object PumlSequenceDiagram : TraceRenderer {
            |"$origin" <-> "$target": $request
             """.trimMargin()
 
-    private fun Event.asPumlSequenceDiagram(): String = """
+    private fun FireAndForget.asPumlSequenceDiagram(): String = """
            |"$origin" -> "$target": $request
             """.trimMargin()
 

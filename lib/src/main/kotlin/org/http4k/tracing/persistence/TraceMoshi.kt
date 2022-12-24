@@ -7,7 +7,7 @@ import org.http4k.format.ListAdapter
 import org.http4k.format.asConfigurable
 import org.http4k.format.withStandardMappings
 import org.http4k.tracing.BiDirectional
-import org.http4k.tracing.Event
+import org.http4k.tracing.FireAndForget
 import org.http4k.tracing.RequestResponse
 import org.http4k.tracing.Trace
 import org.http4k.tracing.TraceActor
@@ -25,7 +25,7 @@ object TraceMoshi : ConfigurableMoshi(
                 .of(Trace::class.java, "type")
                 .withSubtype(RequestResponse::class.java, "RequestResponse")
                 .withSubtype(BiDirectional::class.java, "BiDirectional")
-                .withSubtype(Event::class.java, "Event")
+                .withSubtype(FireAndForget::class.java, "FireAndForget")
         )
         .add(
             PolymorphicJsonAdapterFactory
