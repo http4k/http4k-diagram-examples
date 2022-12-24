@@ -4,7 +4,7 @@ import org.http4k.events.Event
 import org.http4k.events.Events
 import org.http4k.events.MetadataEvent
 import org.http4k.testing.RecordingEvents
-import org.http4k.tracing.NamedTrace
+import org.http4k.tracing.ScenarioTraces
 import org.http4k.tracing.StartRendering
 import org.http4k.tracing.StopRendering
 import org.http4k.tracing.TracePersistence
@@ -29,10 +29,6 @@ class TracingEvents(
     private val mode: RecordingMode = AUTO
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
 
-    private val fullTitle = run {
-        title.capitalize().replace('-', ' ') + (testVariant?.let { " ($testVariant)" } ?: "")
-    }
-
     private val tracerBullet = TracerBullet(tracers)
 
     private val events = RecordingEvents().apply {
@@ -41,14 +37,15 @@ class TracingEvents(
 
     override fun afterTestExecution(context: ExtensionContext) {
         if (context.executionException.isEmpty) {
-            val scenarioName = "$fullTitle: ${context.testMethod.get().name}"
+            val scenarioName = "${
+                title.capitalize().replace('-', ' ') + (testVariant?.let { " ($testVariant)" } ?: "")
+            }: ${context.testMethod.get().name}"
 
             val traces = tracerBullet(events.toList())
 
-            tracePersistence.store(NamedTrace(scenarioName, traces))
-            renderers.forEach {
-                persistence(it.render(scenarioName, traces))
-            }
+            tracePersistence.store(ScenarioTraces(scenarioName, traces))
+
+            renderers.forEach { persistence(it.render(scenarioName, traces)) }
         }
     }
 
