@@ -25,13 +25,12 @@ class TracingEvents(
     tracers: List<Tracer>,
     private val renderers: List<TraceRenderer>,
     private val persistence: TraceRenderPersistence,
-    private val mode: RecordingMode = AUTO,
-    private val tracePersistence: TracePersistence = TracePersistence.InMemory()
+    private val tracePersistence: TracePersistence = TracePersistence.InMemory(),
+    private val mode: RecordingMode = AUTO
 ) : Events, Iterable<Event>, AfterTestExecutionCallback {
 
     private val fullTitle = run {
-        val baseTitle = title.capitalize().replace('-', ' ')
-        baseTitle + (testVariant?.let { " ($testVariant)" } ?: "")
+        title.capitalize().replace('-', ' ') + (testVariant?.let { " ($testVariant)" } ?: "")
     }
 
     private val tracerBullet = TracerBullet(tracers)

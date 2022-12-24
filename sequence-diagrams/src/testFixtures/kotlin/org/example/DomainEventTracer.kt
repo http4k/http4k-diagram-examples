@@ -15,7 +15,7 @@ class DomainEventTracer(private val origin: OriginNamer) : Tracer {
             ?: emptyList()
 }
 
-fun Trace.Companion.DomainEvent(
+private fun Trace.Companion.DomainEvent(
     origin: String,
     request: String
 ) = BiDirectional(

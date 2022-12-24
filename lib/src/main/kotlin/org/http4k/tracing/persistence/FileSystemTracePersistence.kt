@@ -1,10 +1,10 @@
 package org.http4k.tracing.persistence
 
 import org.http4k.tracing.NamedTrace
-import org.http4k.tracing.TraceMoshi.asA
-import org.http4k.tracing.TraceMoshi.asFormatString
-import org.http4k.tracing.TraceMoshi.prettify
 import org.http4k.tracing.TracePersistence
+import org.http4k.tracing.persistence.TraceMoshi.asA
+import org.http4k.tracing.persistence.TraceMoshi.asFormatString
+import org.http4k.tracing.persistence.TraceMoshi.prettify
 import java.io.File
 
 fun TracePersistence.Companion.FileSystem(dir: File) = object : TracePersistence {

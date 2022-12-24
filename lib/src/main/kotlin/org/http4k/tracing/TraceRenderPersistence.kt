@@ -6,5 +6,3 @@ fun interface TraceRenderPersistence {
     companion object
 }
 
-val TraceRenderPersistence.Companion.NoOp get() = TraceRenderPersistence { }
-

@@ -14,7 +14,7 @@ class DatabaseTracer(private val origin: OriginNamer) : Tracer {
         ?: emptyList()
 }
 
-fun Trace.Companion.Database(origin: String, request: String) = BiDirectional(
+private fun Trace.Companion.Database(origin: String, request: String) = BiDirectional(
     origin,
     "db",
     TraceActor.Internal(origin),

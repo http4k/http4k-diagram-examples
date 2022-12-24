@@ -32,7 +32,7 @@ fun HttpTracer(origin: OriginNamer) = object : Tracer {
     }
 }
 
-fun Trace.Companion.Http(
+private fun Trace.Companion.Http(
     origin: String,
     originating: Boolean,
     uri: Uri,

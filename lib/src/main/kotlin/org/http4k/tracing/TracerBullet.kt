@@ -4,6 +4,7 @@ import org.http4k.events.Event
 import org.http4k.events.MetadataEvent
 import org.http4k.tracing.CollectEvents.collect
 import org.http4k.tracing.CollectEvents.drop
+import org.http4k.tracing.tracer.TreeWalker
 
 /**
  * Entry--point for creating Trace from a list of MetadataEvents. Provide a Tracer for each of the
