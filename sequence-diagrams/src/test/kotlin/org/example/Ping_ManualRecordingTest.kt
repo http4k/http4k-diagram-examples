@@ -10,7 +10,7 @@ class Ping_ManualRecordingTest {
 
     // generates PlantUML diagrams in .generated/diagrams
     @RegisterExtension
-    val events = CustomTracingEvents("sequence-diagram-example", recordingMode = MANUAL)
+    val events = CustomTracingEvents("PUML example", recordingMode = MANUAL)
 
     private val pingServer = pingApp()
     private val pingClient = AppOutgoingHttp(AppEvents("another-server").then(events)).then(pingServer)
@@ -19,7 +19,7 @@ class Ping_ManualRecordingTest {
 
     @Test
     fun `Indirect ping test`() {
-        events.record {
+        events.render {
             pingActor.indirectPing()
         }
     }

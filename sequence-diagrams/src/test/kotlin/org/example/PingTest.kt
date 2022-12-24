@@ -12,7 +12,7 @@ class PingTest {
 
     // generates PlantUML diagrams in .generated/diagrams
     @RegisterExtension
-    val events = CustomTracingEvents("sequence-diagram-example", recordingMode = AUTO)
+    val events = CustomTracingEvents("PUML example", recordingMode = AUTO)
 
     private val pingServer = pingApp()
     private val pingClient = AppOutgoingHttp(AppEvents("another-server").then(events)).then(pingServer)

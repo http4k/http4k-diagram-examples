@@ -6,8 +6,12 @@ import org.http4k.tracing.persistence.TraceMoshi.asA
 import org.http4k.tracing.persistence.TraceMoshi.asFormatString
 import org.http4k.tracing.persistence.TraceMoshi.prettify
 import java.io.File
+import java.nio.file.Files.createTempDirectory
 
-fun TracePersistence.Companion.FileSystem(dir: File) = object : TracePersistence {
+/**
+ * Records all traces to JSON format in a known directory location.
+ */
+fun TracePersistence.Companion.FileSystem(dir: File = createTempDirectory("").toFile()) = object : TracePersistence {
     override fun store(trace: ScenarioTraces) {
         File(dir.apply { mkdirs() }, trace.name + TRACE_SUFFIX)
             .writeText(prettify(asFormatString(trace)))

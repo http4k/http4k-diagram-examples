@@ -1,10 +1,12 @@
 @startuml
-title Sequence diagram example (auto): Ignored interactions
+title PUML example (auto): Indirect ping test
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
 Person(JohnDoe, "John Doe")
+System(anotherserver, "another-server")
 System(aserver, "a-server")    
-Rel_D(JohnDoe, aserver, " ")     
+Rel_D(JohnDoe, anotherserver, " ") 
+Rel_D(anotherserver, aserver, " ")     
 @enduml

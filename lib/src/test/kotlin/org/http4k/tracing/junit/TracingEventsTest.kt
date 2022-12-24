@@ -78,11 +78,11 @@ class TracingEventsTest {
         val decoratedEvents = AddZipkinTraces().then(events)
         decoratedEvents(MyEvent)
 
-        events.record { decoratedEvents(MyOtherEvent) }
+        events.render { decoratedEvents(MyOtherEvent) }
 
         decoratedEvents(MyEvent)
 
-        events.record { decoratedEvents(YetAnotherEvent) }
+        events.render { decoratedEvents(YetAnotherEvent) }
 
         events.afterTestExecution(FakeEC())
 
@@ -97,7 +97,7 @@ class TracingEventsTest {
         ))
     }
 
-    private fun tracingEvents(recordingMode: RecordingMode) = TracingEvents(
+    private fun tracingEvents(recordingMode: RecordingMode) = TracerBulletEvents(
         "title", "variant",
         listOf(MyTracer()),
         listOf(MyTraceRenderer()),

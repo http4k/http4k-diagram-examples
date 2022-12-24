@@ -1,5 +1,5 @@
 @startuml
-title Sequence diagram example (auto): Indirect ping test
+title PUML example (auto): Indirect ping test
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 

@@ -12,14 +12,17 @@ import org.http4k.tracing.TraceRenderPersistence
 import org.http4k.tracing.TraceRenderer
 import org.http4k.tracing.Tracer
 import org.http4k.tracing.TracerBullet
-import org.http4k.tracing.capitalize
 import org.http4k.tracing.junit.RecordingMode.AUTO
 import org.http4k.tracing.junit.RecordingMode.MANUAL
 import org.http4k.tracing.persistence.InMemory
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext
+import java.util.Locale
 
-class TracingEvents(
+/**
+ * An Events implementation which also generates Trace renderings and stores them
+ */
+class TracerBulletEvents(
     private val title: String,
     private val testVariant: String?,
     tracers: List<Tracer>,
@@ -43,7 +46,6 @@ class TracingEvents(
 
             val traces = tracerBullet(events.toList())
 
-            println(traces)
             if(traces.isNotEmpty()) {
                 tracePersistence.store(ScenarioTraces(scenarioName, traces))
                 renderers.forEach { traceRenderPersistence(it.render(scenarioName, traces)) }
@@ -51,7 +53,10 @@ class TracingEvents(
         }
     }
 
-    fun record(block: () -> Unit) {
+    /**
+     * Enable Trac rendering for just this block.
+     */
+    fun render(block: () -> Unit) {
         events(MetadataEvent(StartRendering))
         block()
         events(MetadataEvent(StopRendering))
@@ -65,3 +70,5 @@ class TracingEvents(
         .map { if (it is MetadataEvent) it.event else it }
         .iterator()
 }
+
+private fun String.capitalize() = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }

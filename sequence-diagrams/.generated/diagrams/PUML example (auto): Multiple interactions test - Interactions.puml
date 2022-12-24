@@ -1,5 +1,5 @@
 @startuml
-title Sequence diagram example (auto): Multiple interactions test
+title PUML example (auto): Multiple interactions test
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 

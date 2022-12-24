@@ -1,5 +1,5 @@
 @startuml
-title Sequence diagram example (auto): Ignored interactions
+title PUML example (auto): Ping test
 participant "John Doe"
 participant "a-server"
 "John Doe" -> "a-server": GET ping 

@@ -2,8 +2,8 @@ package org.http4k.tracing
 
 import org.http4k.events.Event
 import org.http4k.events.MetadataEvent
-import org.http4k.tracing.CollectEvents.collect
-import org.http4k.tracing.CollectEvents.drop
+import org.http4k.tracing.CollectEvents.Collect
+import org.http4k.tracing.CollectEvents.Drop
 import org.http4k.tracing.tracer.TreeWalker
 
 /**
@@ -21,23 +21,23 @@ class TracerBullet(private val tracers: List<Tracer>) {
     }
 }
 
-private enum class CollectEvents { collect, drop }
+private enum class CollectEvents { Collect, Drop }
 
 private fun List<MetadataEvent>.removeUnrenderedEvents(): List<MetadataEvent> {
     fun List<MetadataEvent>.andNext(collectEvents: CollectEvents) = this to collectEvents
 
-    val collectElements = if (any { it.event == StartRendering }) drop else collect
+    val collectElements = if (any { it.event == StartRendering }) Drop else Collect
 
     return fold(Pair(listOf<MetadataEvent>(), collectElements)) { acc, event ->
         when (acc.second) {
-            collect -> when (event.event) {
-                StopRendering -> acc.first.andNext(drop)
-                else -> (acc.first + event).andNext(collect)
+            Collect -> when (event.event) {
+                StopRendering -> acc.first.andNext(Drop)
+                else -> (acc.first + event).andNext(Collect)
             }
 
-            drop -> when (event.event) {
-                StartRendering -> acc.first.andNext(collect)
-                else -> acc.first.andNext(drop)
+            Drop -> when (event.event) {
+                StartRendering -> acc.first.andNext(Collect)
+                else -> acc.first.andNext(Drop)
             }
         }
     }.first
