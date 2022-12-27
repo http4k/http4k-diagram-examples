@@ -1,5 +1,5 @@
 @startuml
-title PUML example (manual)
+title PingTest Indirect ping test (Auto)
 participant "John Doe"
 participant "another-server"
 participant "a-server"

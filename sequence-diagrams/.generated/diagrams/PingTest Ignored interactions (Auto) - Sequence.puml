@@ -1,5 +1,5 @@
 @startuml
-title PUML example (auto)
+title PingTest Ignored interactions (Auto)
 participant "John Doe"
 participant "a-server"
 "John Doe" -> "a-server": GET ping

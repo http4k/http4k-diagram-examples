@@ -1,5 +1,5 @@
 @startuml
-title PUML example (manual)
+title Ping_ManualRecordingTest Indirect ping test (Manual)
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 

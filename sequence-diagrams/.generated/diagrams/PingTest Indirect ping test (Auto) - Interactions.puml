@@ -1,10 +1,12 @@
 @startuml
-title PUML example (auto)
+title PingTest Indirect ping test (Auto)
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
 
 System(JohnDoe, "John Doe")
+System(anotherserver, "another-server")
 System(aserver, "a-server")    
-Rel_D(JohnDoe, aserver, " ")     
+Rel_D(JohnDoe, anotherserver, " ") 
+Rel_D(anotherserver, aserver, " ")     
 @enduml
