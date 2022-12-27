@@ -1,5 +1,5 @@
 @startuml
-title PUML example (auto): Ignored interactions
+title PUML example (auto)
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 

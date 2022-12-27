@@ -11,12 +11,11 @@ import org.http4k.tracing.renderer.PumlSequenceDiagram
 import org.http4k.tracing.tracer.HttpTracer
 import java.io.File
 
-fun CustomTracingEvents(app: String, recordingMode: RecordingMode) = TracerBulletEvents(
-    app,
+fun CustomTracingEvents(name: String, recordingMode: RecordingMode) = TracerBulletEvents(
     listOf(HttpTracer(AppName), DatabaseTracer(AppName), DomainEventTracer(AppName)),
     listOf(PumlSequenceDiagram, PumlInteractionDiagram, PumlInteractionFlowDiagram),
     FILE_TRACE_RENDER_PERSISTENCE,
-    recordingMode.name.lowercase(),
+    { name + " (" + recordingMode.name.lowercase() + ")" },
     FILE_TRACE_PERSISTENCE,
     recordingMode
 )

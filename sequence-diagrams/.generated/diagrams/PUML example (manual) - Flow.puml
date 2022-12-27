@@ -1,5 +1,5 @@
 @startuml
-title PUML example (auto): Indirect ping test
+title PUML example (manual)
 
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
@@ -7,6 +7,6 @@ title PUML example (auto): Indirect ping test
 Container(JohnDoe, "John Doe")
 Container(anotherserver, "another-server")
 Container(aserver, "a-server")    
-Rel_D(JohnDoe, anotherserver, "1. GET indirect-ping ")
-Rel_D(anotherserver, aserver, "2. GET ping ")    
+Rel_D(JohnDoe, anotherserver, "1. GET indirect-ping")
+Rel_D(anotherserver, aserver, "2. GET ping")    
 @enduml
